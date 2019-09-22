@@ -10,16 +10,40 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.gitignore = .gitignore
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "regzck", "regzck\regzck.vcxproj", "{57D8911D-9040-4693-B469-FDBA72BC721E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
 		Release|Any CPU = Release|Any CPU
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{A2DDC498-C351-4A0D-94EE-9949C5F7720F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{A2DDC498-C351-4A0D-94EE-9949C5F7720F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A2DDC498-C351-4A0D-94EE-9949C5F7720F}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{A2DDC498-C351-4A0D-94EE-9949C5F7720F}.Debug|x64.Build.0 = Debug|Any CPU
+		{A2DDC498-C351-4A0D-94EE-9949C5F7720F}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{A2DDC498-C351-4A0D-94EE-9949C5F7720F}.Debug|x86.Build.0 = Debug|Any CPU
 		{A2DDC498-C351-4A0D-94EE-9949C5F7720F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A2DDC498-C351-4A0D-94EE-9949C5F7720F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A2DDC498-C351-4A0D-94EE-9949C5F7720F}.Release|x64.ActiveCfg = Release|Any CPU
+		{A2DDC498-C351-4A0D-94EE-9949C5F7720F}.Release|x64.Build.0 = Release|Any CPU
+		{A2DDC498-C351-4A0D-94EE-9949C5F7720F}.Release|x86.ActiveCfg = Release|Any CPU
+		{A2DDC498-C351-4A0D-94EE-9949C5F7720F}.Release|x86.Build.0 = Release|Any CPU
+		{57D8911D-9040-4693-B469-FDBA72BC721E}.Debug|Any CPU.ActiveCfg = Debug|Win32
+		{57D8911D-9040-4693-B469-FDBA72BC721E}.Debug|x64.ActiveCfg = Debug|x64
+		{57D8911D-9040-4693-B469-FDBA72BC721E}.Debug|x64.Build.0 = Debug|x64
+		{57D8911D-9040-4693-B469-FDBA72BC721E}.Debug|x86.ActiveCfg = Debug|Win32
+		{57D8911D-9040-4693-B469-FDBA72BC721E}.Debug|x86.Build.0 = Debug|Win32
+		{57D8911D-9040-4693-B469-FDBA72BC721E}.Release|Any CPU.ActiveCfg = Release|Win32
+		{57D8911D-9040-4693-B469-FDBA72BC721E}.Release|x64.ActiveCfg = Release|x64
+		{57D8911D-9040-4693-B469-FDBA72BC721E}.Release|x64.Build.0 = Release|x64
+		{57D8911D-9040-4693-B469-FDBA72BC721E}.Release|x86.ActiveCfg = Release|Win32
+		{57D8911D-9040-4693-B469-FDBA72BC721E}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

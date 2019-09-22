@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:win_prog_course_exp"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="Windows Programming Course Experiments -- Chengkai Zhang" Height="450" Width="800" MinHeight="400" MinWidth="750">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="200" />
@@ -15,9 +15,41 @@
             <RowDefinition Height="35" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <Label Grid.Row="0" Grid.Column="0" Content="实验列表" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Background="#FFE1EDFF"/>
-        <Label Grid.Row="0" Grid.Column="1" Content="输出" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Background="#FFFFE1E1"/>
-        <TextBlock Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="5,5,5,5" TextWrapping="Wrap" Text="Test Output" />
-        <Rectangle Grid.Row="1" Grid.Column="0" Fill="#FFFFFBE1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+        <Grid Grid.Row="0" Grid.Column="0">
+            <Label Content="实验列表" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Background="#FFFFE1E1"/>
+        </Grid>
+        <Grid Grid.Row="1" Grid.Column="0">
+            <Rectangle Fill="#FFFFFBE1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+        </Grid>
+        <Grid Grid.Row="0" Grid.Column="1" Grid.RowSpan="2">
+            <TabControl HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                <TabItem Header="Output">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+                        <Grid Grid.Row="0" Grid.Column="0">
+                            <TextBlock HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="5,5,5,5" TextWrapping="Wrap" Text="Test Output" />
+                        </Grid>
+                    </Grid>
+                </TabItem>
+                <TabItem Header="TreeView">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+                        <Grid Grid.Row="0" Grid.Column="0">
+                            <TreeView HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="5,5,5,5" />
+                        </Grid>
+                    </Grid>
+                </TabItem>
+            </TabControl>
+        </Grid>
     </Grid>
 </Window>
