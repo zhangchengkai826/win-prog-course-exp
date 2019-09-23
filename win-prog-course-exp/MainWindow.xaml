@@ -45,7 +45,15 @@
                             <RowDefinition Height="*" />
                         </Grid.RowDefinitions>
                         <Grid Grid.Row="0" Grid.Column="0">
-                            <TreeView HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="5,5,5,5" />
+                            <TreeView HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="5,5,5,5">
+                                <TreeViewItem Header="Computer" IsExpanded="True">
+                                    <TreeViewItem Header="HKEY_CLASSES_ROOT" IsExpanded="False"></TreeViewItem>
+                                    <TreeViewItem Header="HKEY_CURRENT_USER" IsExpanded="False"></TreeViewItem>
+                                    <TreeViewItem Header="HKEY_LOCAL_MACHINE" IsExpanded="False"></TreeViewItem>
+                                    <TreeViewItem Header="HKEY_USERS" IsExpanded="False"></TreeViewItem>
+                                    <TreeViewItem Header="HKEY_CURRENT_CONFIG" IsExpanded="False"></TreeViewItem>
+                                </TreeViewItem>
+                            </TreeView>
                         </Grid>
                     </Grid>
                 </TabItem>
