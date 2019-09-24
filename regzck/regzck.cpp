@@ -18,7 +18,7 @@ void __stdcall regList(HKEY hKey, KeyName subKeyNames[], int *pcSubKeys) {
 
 	DWORD i, retCode;
 
-	TCHAR  achValue[MAX_VALUE_NAME];
+	//TCHAR  achValue[MAX_VALUE_NAME];
 	DWORD cchValue = MAX_VALUE_NAME;
 
 	// Get the class name and the value count. 

@@ -7,8 +7,10 @@
 const int MAX_KEY_LENGTH = 255;
 const int MAX_VALUE_NAME = 16383;
 
-struct KeyName {
+typedef struct tagKeyName {
 	TCHAR    achKey[MAX_KEY_LENGTH];   // buffer for subkey name
-};
+} KeyName;
 
-extern "C" void __stdcall regList(HKEY hKey, KeyName subKeyNames[], int* pcSubKeys);
+extern "C" {
+	void __stdcall regList(HKEY hKey, KeyName subKeyNames[], int* pcSubKeys);
+}

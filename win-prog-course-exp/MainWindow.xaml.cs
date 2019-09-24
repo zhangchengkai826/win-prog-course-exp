@@ -34,6 +34,16 @@ namespace win_prog_course_exp
             root.Items.Add(new TreeViewItem(TreeViewItemType.FOLDER) { Title = "HKEY_CURRENT_CONFIG" });
             treeView.Items.Add(root);
         }
+
+        [DllImport("regzck.dll", EntryPoint = "regList", CallingConvention = CallingConvention.StdCall)]
+        public static extern void regList(ref KeyName[] subKeyNames, ref int pcSubKeys);
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    public struct KeyName
+    {
+        [MarshalAs(UnmanagedType.LPTStr)]
+        public string achKey;
     }
 
     public enum TreeViewItemType { COMPUTER, FOLDER, FOLDER_OPEN, }
