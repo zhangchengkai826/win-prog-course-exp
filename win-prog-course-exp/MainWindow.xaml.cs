@@ -27,16 +27,16 @@ namespace win_prog_course_exp
         {
             InitializeComponent();
             var root = new RegTreeViewItem(RegTreeViewItemType.COMPUTER) { Title = "Computer" };
-            root.Items.Add(new RegTreeViewItem(RegTreeViewItemType.FOLDER) { Title = "HKEY_CLASSES_ROOT" });
-            root.Items.Add(new RegTreeViewItem(RegTreeViewItemType.FOLDER) { Title = "HKEY_CURRENT_USER" });
-            root.Items.Add(new RegTreeViewItem(RegTreeViewItemType.FOLDER) { Title = "HKEY_LOCAL_MACHINE" });
-            root.Items.Add(new RegTreeViewItem(RegTreeViewItemType.FOLDER) { Title = "HKEY_USERS" });
-            root.Items.Add(new RegTreeViewItem(RegTreeViewItemType.FOLDER) { Title = "HKEY_CURRENT_CONFIG" });
+            root.Items.Add(new RegTreeViewItem(RegTreeViewItemType.FOLDER) { Title = "HKEY_CLASSES_ROOT", hKey = (IntPtr)0x80000000 });
+            root.Items.Add(new RegTreeViewItem(RegTreeViewItemType.FOLDER) { Title = "HKEY_CURRENT_USER", hKey = (IntPtr)0x80000001 });
+            root.Items.Add(new RegTreeViewItem(RegTreeViewItemType.FOLDER) { Title = "HKEY_LOCAL_MACHINE", hKey = (IntPtr)0x80000002 });
+            root.Items.Add(new RegTreeViewItem(RegTreeViewItemType.FOLDER) { Title = "HKEY_USERS", hKey = (IntPtr)0x80000003 });
+            root.Items.Add(new RegTreeViewItem(RegTreeViewItemType.FOLDER) { Title = "HKEY_CURRENT_CONFIG", hKey = (IntPtr)0x80000005 });
             treeView.Items.Add(root);
         }
 
         [DllImport("regzck.dll", EntryPoint = "regList", CallingConvention = CallingConvention.StdCall)]
-        public static extern void regList(uint hKey, out IntPtr subKeyNames, out int pcSubKeys);
+        public static extern void regList(IntPtr hKey, out IntPtr subKeyNames, out int pcSubKeys);
 
         private void TreeView_Expanded(object sender, RoutedEventArgs e)
         {
@@ -50,7 +50,7 @@ namespace win_prog_course_exp
                     {
                         IntPtr subKeyNamesUnmanaged;
                         int cSubKeys;
-                        regList(0x80000000, out subKeyNamesUnmanaged, out cSubKeys);
+                        regList(context.hKey, out subKeyNamesUnmanaged, out cSubKeys);
 
                         var subKeyNames = new KeyName[cSubKeys];
                         var keyNameStride = Marshal.SizeOf(typeof(KeyName));
@@ -104,5 +104,6 @@ namespace win_prog_course_exp
 
         public RegTreeViewItemType Type { get; set; }
 
+        public IntPtr hKey { get; set; }
     }
 }
