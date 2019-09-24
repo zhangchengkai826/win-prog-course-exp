@@ -13,4 +13,5 @@ typedef struct tagKeyName {
 
 extern "C" {
 	void __stdcall regList(HKEY hKey, KeyName** subKeyNames, int* pcSubKeys);
+	void __stdcall regOpen(HKEY parentKey, KeyName name, HKEY* output);
 }

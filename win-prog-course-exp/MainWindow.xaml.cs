@@ -38,6 +38,22 @@ namespace win_prog_course_exp
         [DllImport("regzck.dll", EntryPoint = "regList", CallingConvention = CallingConvention.StdCall)]
         public static extern void regList(IntPtr hKey, out IntPtr subKeyNames, out int pcSubKeys);
 
+        [DllImport("regzck.dll", EntryPoint = "regOpen", CallingConvention = CallingConvention.StdCall)]
+        public static extern void regOpen(IntPtr parentKey, KeyName name, out IntPtr output);
+
+        public static readonly IntPtr[] hKeyPredefined = { (IntPtr)0x80000000, (IntPtr)0x80000001, (IntPtr)0x80000002, (IntPtr)0x80000003, (IntPtr)0x80000005 };
+
+        private static TreeViewItem getParent(TreeViewItem item)
+        {
+            var parent = VisualTreeHelper.GetParent(item);
+            while (!(parent is TreeViewItem))
+            {
+                parent = VisualTreeHelper.GetParent(parent);
+            }
+
+            return parent as TreeViewItem;
+        }
+
         private void TreeView_Expanded(object sender, RoutedEventArgs e)
         {
             var tvi = e.OriginalSource as TreeViewItem;
@@ -46,8 +62,16 @@ namespace win_prog_course_exp
                 var context = tvi.DataContext as RegTreeViewItem;
                 if(context != null)
                 {
-                    if(context.Title != "Computer")
+                    if(context.Title != "Computer" && context.Items.Count == 0)
                     {
+                        if(!hKeyPredefined.Contains(context.hKey))
+                        {
+                            var name = new KeyName() { achKey = context.Title };
+                            IntPtr output;
+                            regOpen((getParent(tvi).DataContext as RegTreeViewItem).hKey, name, out output);
+                            context.hKey = output;
+                        }
+
                         IntPtr subKeyNamesUnmanaged;
                         int cSubKeys;
                         regList(context.hKey, out subKeyNamesUnmanaged, out cSubKeys);
@@ -58,6 +82,11 @@ namespace win_prog_course_exp
                         {
                             var p = new IntPtr(subKeyNamesUnmanaged.ToInt64() + i * keyNameStride);
                             subKeyNames[i] = (KeyName)Marshal.PtrToStructure(p, typeof(KeyName));
+                        }
+
+                        for(int i = 0; i < cSubKeys; i++)
+                        {
+                            context.Items.Add(new RegTreeViewItem(RegTreeViewItemType.FOLDER) { Title = subKeyNames[i].achKey });
                         }
                     }
                 }

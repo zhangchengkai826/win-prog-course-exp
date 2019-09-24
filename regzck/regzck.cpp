@@ -86,3 +86,9 @@ void __stdcall regList(HKEY hKey, KeyName **subKeyNames, int *pcSubKeys) {
 	//	}
 	//}
 }
+
+void __stdcall regOpen(HKEY parentKey, KeyName name, HKEY* output) {
+	if (RegOpenKeyEx(parentKey, name.achKey, 0, KEY_READ, output) != ERROR_SUCCESS) {
+		// log error
+	}
+}
