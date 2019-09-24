@@ -45,9 +45,9 @@
                             <RowDefinition Height="*" />
                         </Grid.RowDefinitions>
                         <Grid Grid.Row="0" Grid.Column="0">
-                            <TreeView Name="treeView" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="5,5,5,5">
+                            <TreeView Name="treeView" TreeViewItem.Expanded="TreeView_Expanded" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="5,5,5,5">
                                 <TreeView.ItemTemplate>
-                                    <HierarchicalDataTemplate DataType="x:Type local:TreeViewItem" ItemsSource="{Binding Items}">
+                                    <HierarchicalDataTemplate DataType="x:Type local:RegTreeViewItem" ItemsSource="{Binding Items}">
                                         <StackPanel Orientation="Horizontal">
                                             <Image Width="22" Height="22" Margin="0,0,5,-5" Source="{Binding Icon}" />
                                             <TextBlock FontSize="22" Text="{Binding Title}" />

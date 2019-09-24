@@ -4,6 +4,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 16.0.29306.81
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "win-prog-course-exp", "win-prog-course-exp\win-prog-course-exp.csproj", "{A2DDC498-C351-4A0D-94EE-9949C5F7720F}"
+	ProjectSection(ProjectDependencies) = postProject
+		{57D8911D-9040-4693-B469-FDBA72BC721E} = {57D8911D-9040-4693-B469-FDBA72BC721E}
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{3A9CA20F-0182-4414-8609-0BCF8A933F71}"
 	ProjectSection(SolutionItems) = preProject

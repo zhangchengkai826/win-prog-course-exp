@@ -1,9 +1,9 @@
 #include "pch.h"
 #include "regzck.h"
 
-std::vector<KeyName> vSubkeyNames;
+std::vector<KeyName> vSubKeyNames;
 
-void __stdcall regList(HKEY hKey, KeyName subKeyNames[], int *pcSubKeys) {
+void __stdcall regList(HKEY hKey, KeyName **subKeyNames, int *pcSubKeys) {
 	DWORD    cbName;                   // size of name string 
 	TCHAR    achClass[MAX_PATH] = TEXT("");  // buffer for class name 
 	DWORD    cchClassName = MAX_PATH;  // size of class string 
@@ -17,6 +17,8 @@ void __stdcall regList(HKEY hKey, KeyName subKeyNames[], int *pcSubKeys) {
 	FILETIME ftLastWriteTime;      // last write time 
 
 	DWORD i, retCode;
+
+	HKEY hkey2 = HKEY_CLASSES_ROOT;
 
 	//TCHAR  achValue[MAX_VALUE_NAME];
 	DWORD cchValue = MAX_VALUE_NAME;
@@ -40,13 +42,13 @@ void __stdcall regList(HKEY hKey, KeyName subKeyNames[], int *pcSubKeys) {
 
 	if (cSubKeys)
 	{
-		vSubkeyNames.resize(cSubKeys);
+		vSubKeyNames.resize(cSubKeys);
 		int cRealSubKeys = 0;
 		for (i = 0; i < cSubKeys; i++)
 		{
 			cbName = MAX_KEY_LENGTH;
 			retCode = RegEnumKeyEx(hKey, i,
-				vSubkeyNames[cRealSubKeys].achKey,
+				vSubKeyNames[cRealSubKeys].achKey,
 				&cbName,
 				NULL,
 				NULL,
@@ -57,8 +59,8 @@ void __stdcall regList(HKEY hKey, KeyName subKeyNames[], int *pcSubKeys) {
 				cRealSubKeys++;
 			}
 		}
-		subKeyNames = vSubkeyNames.data();
-		pcSubKeys = &cRealSubKeys;
+		*subKeyNames = vSubKeyNames.data();
+		*pcSubKeys = cRealSubKeys;
 	}
 
 	// Enumerate the key values. 

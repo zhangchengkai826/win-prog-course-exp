@@ -26,43 +26,69 @@ namespace win_prog_course_exp
         public MainWindow()
         {
             InitializeComponent();
-            var root = new TreeViewItem(TreeViewItemType.COMPUTER) { Title = "Computer" };
-            root.Items.Add(new TreeViewItem(TreeViewItemType.FOLDER) { Title = "HKEY_CLASSES_ROOT" });
-            root.Items.Add(new TreeViewItem(TreeViewItemType.FOLDER) { Title = "HKEY_CURRENT_USER" });
-            root.Items.Add(new TreeViewItem(TreeViewItemType.FOLDER) { Title = "HKEY_LOCAL_MACHINE" });
-            root.Items.Add(new TreeViewItem(TreeViewItemType.FOLDER) { Title = "HKEY_USERS" });
-            root.Items.Add(new TreeViewItem(TreeViewItemType.FOLDER) { Title = "HKEY_CURRENT_CONFIG" });
+            var root = new RegTreeViewItem(RegTreeViewItemType.COMPUTER) { Title = "Computer" };
+            root.Items.Add(new RegTreeViewItem(RegTreeViewItemType.FOLDER) { Title = "HKEY_CLASSES_ROOT" });
+            root.Items.Add(new RegTreeViewItem(RegTreeViewItemType.FOLDER) { Title = "HKEY_CURRENT_USER" });
+            root.Items.Add(new RegTreeViewItem(RegTreeViewItemType.FOLDER) { Title = "HKEY_LOCAL_MACHINE" });
+            root.Items.Add(new RegTreeViewItem(RegTreeViewItemType.FOLDER) { Title = "HKEY_USERS" });
+            root.Items.Add(new RegTreeViewItem(RegTreeViewItemType.FOLDER) { Title = "HKEY_CURRENT_CONFIG" });
             treeView.Items.Add(root);
         }
 
         [DllImport("regzck.dll", EntryPoint = "regList", CallingConvention = CallingConvention.StdCall)]
-        public static extern void regList(ref KeyName[] subKeyNames, ref int pcSubKeys);
+        public static extern void regList(uint hKey, out IntPtr subKeyNames, out int pcSubKeys);
+
+        private void TreeView_Expanded(object sender, RoutedEventArgs e)
+        {
+            var tvi = e.OriginalSource as TreeViewItem;
+            if (tvi != null)
+            {
+                var context = tvi.DataContext as RegTreeViewItem;
+                if(context != null)
+                {
+                    if(context.Title != "Computer")
+                    {
+                        IntPtr subKeyNamesUnmanaged;
+                        int cSubKeys;
+                        regList(0x80000000, out subKeyNamesUnmanaged, out cSubKeys);
+
+                        var subKeyNames = new KeyName[cSubKeys];
+                        var keyNameStride = Marshal.SizeOf(typeof(KeyName));
+                        for (int i = 0; i < cSubKeys; i++)
+                        {
+                            var p = new IntPtr(subKeyNamesUnmanaged.ToInt64() + i * keyNameStride);
+                            subKeyNames[i] = (KeyName)Marshal.PtrToStructure(p, typeof(KeyName));
+                        }
+                    }
+                }
+            }
+        }
     }
 
-    [StructLayout(LayoutKind.Sequential)]
+    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Auto)]
     public struct KeyName
     {
-        [MarshalAs(UnmanagedType.LPTStr)]
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 255)]
         public string achKey;
     }
 
-    public enum TreeViewItemType { COMPUTER, FOLDER, FOLDER_OPEN, }
+    public enum RegTreeViewItemType { COMPUTER, FOLDER, FOLDER_OPEN, }
 
-    public class TreeViewItem
+    public class RegTreeViewItem
     {
-        public TreeViewItem(TreeViewItemType Type)
+        public RegTreeViewItem(RegTreeViewItemType Type)
         {
-            Items = new ObservableCollection<TreeViewItem>();
+            Items = new ObservableCollection<RegTreeViewItem>();
             this.Type = Type;
 
             switch (Type)
             {
-                case TreeViewItemType.COMPUTER:
+                case RegTreeViewItemType.COMPUTER:
                     {
                         Icon = new BitmapImage(new Uri("Resources/icon/computer.png", UriKind.Relative));
                         break;
                     }
-                case TreeViewItemType.FOLDER:
+                case RegTreeViewItemType.FOLDER:
                     {
                         Icon = new BitmapImage(new Uri("Resources/icon/folder.png", UriKind.Relative));
                         break;
@@ -70,13 +96,13 @@ namespace win_prog_course_exp
             }
         }
 
-        public ObservableCollection<TreeViewItem> Items { get; set; }
+        public ObservableCollection<RegTreeViewItem> Items { get; set; }
 
         public string Title { get; set; }
 
         public ImageSource Icon { get; set; }
 
-        public TreeViewItemType Type { get; set; }
+        public RegTreeViewItemType Type { get; set; }
 
     }
 }
