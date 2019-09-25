@@ -28,9 +28,12 @@ namespace win_prog_course_exp
         {
             InitializeComponent();
 
-            List<ChapterBtn> chapterBtns = new List<ChapterBtn>();
-            chapterBtns.Add(new ChapterBtn() { Title = "实验一", Icon = new BitmapImage(new Uri("Resources/icon/exp-report.png", UriKind.Relative)) });
-            chapterBtnsControl.ItemsSource = chapterBtns;
+            ChapterBtn.Items = new ObservableCollection<ChapterBtn>();
+            ChapterBtn.Items.Add(new ChapterBtn() { Title = "实验一", Icon = new BitmapImage(new Uri("Resources/icon/exp-report.png", UriKind.Relative)) });
+            ChapterBtn.Items.Add(new ChapterBtn() { Title = "实验二", Icon = new BitmapImage(new Uri("Resources/icon/exp-report.png", UriKind.Relative)) });
+            ChapterBtn.Items.Add(new ChapterBtn() { Title = "实验三", Icon = new BitmapImage(new Uri("Resources/icon/exp-report.png", UriKind.Relative)) });
+            chapterBtnsControl.ItemsSource = ChapterBtn.Items;
+            ChapterBtn.CurOnId = 1;
 
             var root = new RegTreeViewItem(RegTreeViewItemType.COMPUTER) { Title = "Computer" };
             root.Items.Add(new RegTreeViewItem(RegTreeViewItemType.FOLDER) { Title = "HKEY_CLASSES_ROOT", hKey = (IntPtr)0x80000000 });
@@ -121,10 +124,29 @@ namespace win_prog_course_exp
     }
 
     public class ChapterBtn
-    {
+    { 
+        public ChapterBtn()
+        {
+            IsOn = false;
+        }
         public string Title { get; set; }
 
         public ImageSource Icon { get; set; }
+
+        public bool IsOn { get; set; }
+
+        public static ObservableCollection<ChapterBtn> Items { get; set; }
+        private static int curOnId;
+        public static int CurOnId
+        {
+            get { return curOnId; }
+            set
+            {
+                Items[CurOnId].IsOn = false;
+                curOnId = value;
+                Items[CurOnId].IsOn = true;
+            }
+        }
     }
 
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Auto)]
