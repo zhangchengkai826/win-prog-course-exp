@@ -22,7 +22,7 @@
             <ItemsControl Name="chapterBtnsControl" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <Button BorderThickness="0">
+                        <Button BorderThickness="0" Command="{Binding OnClickCmd}" CommandParameter="{Binding RelativeSource={RelativeSource Self}}">
                             <Button.Style>
                                 <Style TargetType="{x:Type Button}">
                                     <Setter Property="Background" Value="White" />

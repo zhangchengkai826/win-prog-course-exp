@@ -123,18 +123,65 @@ namespace win_prog_course_exp
         }
     }
 
-    public class ChapterBtn
-    { 
+    public class RelayCommand : ICommand
+    {
+        private Action<object> execute;
+        private Func<object, bool> canExecute;
+
+        public event EventHandler CanExecuteChanged
+        {
+            add { CommandManager.RequerySuggested += value; }
+            remove { CommandManager.RequerySuggested -= value; }
+        }
+
+        public RelayCommand(Action<object> execute, Func<object, bool> canExecute = null)
+        {
+            this.execute = execute;
+            this.canExecute = canExecute;
+        }
+
+        public bool CanExecute(object parameter)
+        {
+            return this.canExecute == null || this.canExecute(parameter);
+        }
+
+        public void Execute(object parameter)
+        {
+            this.execute(parameter);
+        }
+    }
+
+    public class ChapterBtn : INotifyPropertyChanged
+    {
         public ChapterBtn()
         {
             Icon = new BitmapImage(new Uri("Resources/icon/chapter.png", UriKind.Relative));
             IsOn = false;
+            OnClickCmd = new RelayCommand(OnClick);
         }
         public string Title { get; set; }
 
-        public ImageSource Icon { get; set; }
+        private ImageSource icon;
+        public ImageSource Icon
+        {
+            get { return icon; }
+            set
+            {
+                icon = value;
+                OnPropertyChanged("Icon");
+            }
+        }
 
-        public bool IsOn { get; set; }
+        private bool isOn;
+        public bool IsOn
+        {
+            get { return isOn; }
+            set
+            {
+                isOn = value;
+                OnPropertyChanged("IsOn");
+            }
+        }
 
         public static ObservableCollection<ChapterBtn> Items { get; set; }
         private static int curOnId;
@@ -150,6 +197,23 @@ namespace win_prog_course_exp
                 Items[CurOnId].IsOn = true;
             }
         }
+        private void OnClick(object obj)
+        {
+            var chapterBtn = (obj as Button).DataContext as ChapterBtn;
+            CurOnId = Items.IndexOf(chapterBtn);
+        }
+        public ICommand OnClickCmd { get; set; }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+        public void OnPropertyChanged(string propertyName)
+        {
+            if (PropertyChanged == null)
+            {
+                return;
+            }
+            PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+        }
+
     }
 
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Auto)]
