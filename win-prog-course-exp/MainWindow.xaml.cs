@@ -29,9 +29,9 @@ namespace win_prog_course_exp
             InitializeComponent();
 
             ChapterBtn.Items = new ObservableCollection<ChapterBtn>();
-            ChapterBtn.Items.Add(new ChapterBtn() { Title = "实验一", Icon = new BitmapImage(new Uri("Resources/icon/exp-report.png", UriKind.Relative)) });
-            ChapterBtn.Items.Add(new ChapterBtn() { Title = "实验二", Icon = new BitmapImage(new Uri("Resources/icon/exp-report.png", UriKind.Relative)) });
-            ChapterBtn.Items.Add(new ChapterBtn() { Title = "实验三", Icon = new BitmapImage(new Uri("Resources/icon/exp-report.png", UriKind.Relative)) });
+            ChapterBtn.Items.Add(new ChapterBtn() { Title = "实验一" });
+            ChapterBtn.Items.Add(new ChapterBtn() { Title = "实验二" });
+            ChapterBtn.Items.Add(new ChapterBtn() { Title = "实验三" });
             chapterBtnsControl.ItemsSource = ChapterBtn.Items;
             ChapterBtn.CurOnId = 1;
 
@@ -127,6 +127,7 @@ namespace win_prog_course_exp
     { 
         public ChapterBtn()
         {
+            Icon = new BitmapImage(new Uri("Resources/icon/chapter.png", UriKind.Relative));
             IsOn = false;
         }
         public string Title { get; set; }
@@ -142,8 +143,10 @@ namespace win_prog_course_exp
             get { return curOnId; }
             set
             {
+                Items[CurOnId].Icon = new BitmapImage(new Uri("Resources/icon/chapter.png", UriKind.Relative));
                 Items[CurOnId].IsOn = false;
                 curOnId = value;
+                Items[curOnId].Icon = new BitmapImage(new Uri("Resources/icon/chapter-open.png", UriKind.Relative));
                 Items[CurOnId].IsOn = true;
             }
         }

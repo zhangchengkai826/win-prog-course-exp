@@ -114,12 +114,17 @@
     <Resource Include="Resources\icon\folder-open.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="Resources\icon\exp-report.png">
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\icon\laptop.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\icon\laptop.png">
+    <Resource Include="Resources\icon\chapter-open.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\icon\chapter.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
   </ItemGroup>
