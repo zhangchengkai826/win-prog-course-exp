@@ -15,6 +15,7 @@ using System.Windows.Shapes;
 using System.Windows.Interop;
 using System.Runtime.InteropServices;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 
 namespace win_prog_course_exp
 {
@@ -26,6 +27,11 @@ namespace win_prog_course_exp
         public MainWindow()
         {
             InitializeComponent();
+
+            List<ChapterBtn> chapterBtns = new List<ChapterBtn>();
+            chapterBtns.Add(new ChapterBtn() { Title = "实验一", Icon = new BitmapImage(new Uri("Resources/icon/exp-report.png", UriKind.Relative)) });
+            chapterBtnsControl.ItemsSource = chapterBtns;
+
             var root = new RegTreeViewItem(RegTreeViewItemType.COMPUTER) { Title = "Computer" };
             root.Items.Add(new RegTreeViewItem(RegTreeViewItemType.FOLDER) { Title = "HKEY_CLASSES_ROOT", hKey = (IntPtr)0x80000000 });
             root.Items.Add(new RegTreeViewItem(RegTreeViewItemType.FOLDER) { Title = "HKEY_CURRENT_USER", hKey = (IntPtr)0x80000001 });
@@ -62,36 +68,63 @@ namespace win_prog_course_exp
                 var context = tvi.DataContext as RegTreeViewItem;
                 if(context != null)
                 {
-                    if(context.Title != "Computer" && context.Items.Count == 0)
+                    if(context.Type != RegTreeViewItemType.COMPUTER)
                     {
-                        if(!hKeyPredefined.Contains(context.hKey))
+                        context.Icon = new BitmapImage(new Uri("Resources/icon/folder-open.png", UriKind.Relative));
+                        if (context.Items.Count == 0)
                         {
-                            var name = new KeyName() { achKey = context.Title };
-                            IntPtr output;
-                            regOpen((getParent(tvi).DataContext as RegTreeViewItem).hKey, name, out output);
-                            context.hKey = output;
-                        }
+                            if (!hKeyPredefined.Contains(context.hKey))
+                            {
+                                var name = new KeyName() { achKey = context.Title };
+                                IntPtr output;
+                                regOpen((getParent(tvi).DataContext as RegTreeViewItem).hKey, name, out output);
+                                context.hKey = output;
+                            }
 
-                        IntPtr subKeyNamesUnmanaged;
-                        int cSubKeys;
-                        regList(context.hKey, out subKeyNamesUnmanaged, out cSubKeys);
+                            IntPtr subKeyNamesUnmanaged;
+                            int cSubKeys;
+                            regList(context.hKey, out subKeyNamesUnmanaged, out cSubKeys);
 
-                        var subKeyNames = new KeyName[cSubKeys];
-                        var keyNameStride = Marshal.SizeOf(typeof(KeyName));
-                        for (int i = 0; i < cSubKeys; i++)
-                        {
-                            var p = new IntPtr(subKeyNamesUnmanaged.ToInt64() + i * keyNameStride);
-                            subKeyNames[i] = (KeyName)Marshal.PtrToStructure(p, typeof(KeyName));
-                        }
+                            var subKeyNames = new KeyName[cSubKeys];
+                            var keyNameStride = Marshal.SizeOf(typeof(KeyName));
+                            for (int i = 0; i < cSubKeys; i++)
+                            {
+                                var p = new IntPtr(subKeyNamesUnmanaged.ToInt64() + i * keyNameStride);
+                                subKeyNames[i] = (KeyName)Marshal.PtrToStructure(p, typeof(KeyName));
+                            }
 
-                        for(int i = 0; i < cSubKeys; i++)
-                        {
-                            context.Items.Add(new RegTreeViewItem(RegTreeViewItemType.FOLDER) { Title = subKeyNames[i].achKey });
+                            for (int i = 0; i < cSubKeys; i++)
+                            {
+                                context.Items.Add(new RegTreeViewItem(RegTreeViewItemType.FOLDER) { Title = subKeyNames[i].achKey });
+                            }
                         }
                     }
                 }
             }
         }
+
+        private void TreeView_Collapsed(object sender, RoutedEventArgs e)
+        {
+            var tvi = e.OriginalSource as TreeViewItem;
+            if (tvi != null)
+            {
+                var context = tvi.DataContext as RegTreeViewItem;
+                if (context != null)
+                {
+                    if (context.Type != RegTreeViewItemType.COMPUTER)
+                    {
+                        context.Icon = new BitmapImage(new Uri("Resources/icon/folder.png", UriKind.Relative));
+                    }
+                }
+            }
+        }
+    }
+
+    public class ChapterBtn
+    {
+        public string Title { get; set; }
+
+        public ImageSource Icon { get; set; }
     }
 
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Auto)]
@@ -101,9 +134,9 @@ namespace win_prog_course_exp
         public string achKey;
     }
 
-    public enum RegTreeViewItemType { COMPUTER, FOLDER, FOLDER_OPEN, }
+    public enum RegTreeViewItemType { COMPUTER, FOLDER, }
 
-    public class RegTreeViewItem
+    public class RegTreeViewItem : INotifyPropertyChanged
     {
         public RegTreeViewItem(RegTreeViewItemType Type)
         {
@@ -114,7 +147,7 @@ namespace win_prog_course_exp
             {
                 case RegTreeViewItemType.COMPUTER:
                     {
-                        Icon = new BitmapImage(new Uri("Resources/icon/computer.png", UriKind.Relative));
+                        Icon = new BitmapImage(new Uri("Resources/icon/laptop.png", UriKind.Relative));
                         break;
                     }
                 case RegTreeViewItemType.FOLDER:
@@ -129,10 +162,29 @@ namespace win_prog_course_exp
 
         public string Title { get; set; }
 
-        public ImageSource Icon { get; set; }
+        private ImageSource icon;
+        public ImageSource Icon
+        {
+            get { return icon; }
+            set
+            {
+                icon = value;
+                OnPropertyChanged("Icon");
+            }
+        }
 
         public RegTreeViewItemType Type { get; set; }
 
         public IntPtr hKey { get; set; }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+        public void OnPropertyChanged(string propertyName)
+        {
+            if (PropertyChanged == null)
+            {
+                return;
+            }
+            PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+        }
     }
 }

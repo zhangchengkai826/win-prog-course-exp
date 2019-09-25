@@ -19,11 +19,22 @@
             <Label Content="实验列表" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Background="#FFFFE1E1"/>
         </Grid>
         <Grid Grid.Row="1" Grid.Column="0">
-            <Rectangle Fill="#FFFFFBE1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+            <ItemsControl Name="chapterBtnsControl" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Button Background="White" BorderThickness="0">
+                            <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
+                                <Image Width="12" Height="12" Margin="0,0,5,0" Source="{Binding Icon}" />
+                                <TextBlock FontSize="12" Text="{Binding Title}" />
+                            </StackPanel>
+                        </Button>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
         </Grid>
         <Grid Grid.Row="0" Grid.Column="1" Grid.RowSpan="2">
             <TabControl HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-                <TabItem Header="Output">
+                <TabItem Header="注册表操作">
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*" />
@@ -32,20 +43,7 @@
                             <RowDefinition Height="*" />
                         </Grid.RowDefinitions>
                         <Grid Grid.Row="0" Grid.Column="0">
-                            <TextBlock HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="5,5,5,5" TextWrapping="Wrap" Text="Test Output" />
-                        </Grid>
-                    </Grid>
-                </TabItem>
-                <TabItem Header="TreeView">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
-                        </Grid.ColumnDefinitions>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="*" />
-                        </Grid.RowDefinitions>
-                        <Grid Grid.Row="0" Grid.Column="0">
-                            <TreeView Name="treeView" TreeViewItem.Expanded="TreeView_Expanded" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="5,5,5,5">
+                            <TreeView Name="treeView" TreeViewItem.Expanded="TreeView_Expanded" TreeViewItem.Collapsed="TreeView_Collapsed" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="5,5,5,5">
                                 <TreeView.ItemTemplate>
                                     <HierarchicalDataTemplate DataType="x:Type local:RegTreeViewItem" ItemsSource="{Binding Items}">
                                         <StackPanel Orientation="Horizontal">

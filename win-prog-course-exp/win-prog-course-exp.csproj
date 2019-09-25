@@ -106,12 +106,20 @@
     <Resource Include="app.ico" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\icon\computer.png">
+    <Resource Include="Resources\icon\folder.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\icon\folder.png">
+    <Resource Include="Resources\icon\folder-open.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\icon\exp-report.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\icon\laptop.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
   </ItemGroup>
