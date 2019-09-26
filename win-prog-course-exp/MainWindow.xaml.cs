@@ -155,22 +155,10 @@ namespace win_prog_course_exp
     {
         public ChapterBtn()
         {
-            Icon = new BitmapImage(new Uri("Resources/icon/chapter.png", UriKind.Relative));
             IsOn = false;
             OnClickCmd = new RelayCommand(OnClick);
         }
         public string Title { get; set; }
-
-        private ImageSource icon;
-        public ImageSource Icon
-        {
-            get { return icon; }
-            set
-            {
-                icon = value;
-                OnPropertyChanged("Icon");
-            }
-        }
 
         private bool isOn;
         public bool IsOn
@@ -190,10 +178,8 @@ namespace win_prog_course_exp
             get { return curOnId; }
             set
             {
-                Items[CurOnId].Icon = new BitmapImage(new Uri("Resources/icon/chapter.png", UriKind.Relative));
                 Items[CurOnId].IsOn = false;
                 curOnId = value;
-                Items[curOnId].Icon = new BitmapImage(new Uri("Resources/icon/chapter-open.png", UriKind.Relative));
                 Items[CurOnId].IsOn = true;
             }
         }
@@ -213,7 +199,6 @@ namespace win_prog_course_exp
             }
             PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
         }
-
     }
 
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Auto)]
