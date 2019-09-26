@@ -28,13 +28,6 @@ namespace win_prog_course_exp
         {
             InitializeComponent();
 
-            ChapterBtn.Items = new ObservableCollection<ChapterBtn>();
-            ChapterBtn.Items.Add(new ChapterBtn() { Title = "实验一" });
-            ChapterBtn.Items.Add(new ChapterBtn() { Title = "实验二" });
-            ChapterBtn.Items.Add(new ChapterBtn() { Title = "实验三" });
-            chapterBtnsControl.ItemsSource = ChapterBtn.Items;
-            ChapterBtn.CurOnId = 1;
-
             var root = new RegTreeViewItem(RegTreeViewItemType.COMPUTER) { Title = "Computer" };
             root.Items.Add(new RegTreeViewItem(RegTreeViewItemType.FOLDER) { Title = "HKEY_CLASSES_ROOT", hKey = (IntPtr)0x80000000 });
             root.Items.Add(new RegTreeViewItem(RegTreeViewItemType.FOLDER) { Title = "HKEY_CURRENT_USER", hKey = (IntPtr)0x80000001 });
@@ -148,56 +141,6 @@ namespace win_prog_course_exp
         public void Execute(object parameter)
         {
             this.execute(parameter);
-        }
-    }
-
-    public class ChapterBtn : INotifyPropertyChanged
-    {
-        public ChapterBtn()
-        {
-            IsOn = false;
-            OnClickCmd = new RelayCommand(OnClick);
-        }
-        public string Title { get; set; }
-
-        private bool isOn;
-        public bool IsOn
-        {
-            get { return isOn; }
-            set
-            {
-                isOn = value;
-                OnPropertyChanged("IsOn");
-            }
-        }
-
-        public static ObservableCollection<ChapterBtn> Items { get; set; }
-        private static int curOnId;
-        public static int CurOnId
-        {
-            get { return curOnId; }
-            set
-            {
-                Items[CurOnId].IsOn = false;
-                curOnId = value;
-                Items[CurOnId].IsOn = true;
-            }
-        }
-        private void OnClick(object obj)
-        {
-            var chapterBtn = (obj as Button).DataContext as ChapterBtn;
-            CurOnId = Items.IndexOf(chapterBtn);
-        }
-        public ICommand OnClickCmd { get; set; }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-        public void OnPropertyChanged(string propertyName)
-        {
-            if (PropertyChanged == null)
-            {
-                return;
-            }
-            PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 
