@@ -26,13 +26,14 @@
                 <TabItem Header="注册表操作">
                     <Grid>
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="2*" />
+                            <ColumnDefinition Width="2*" />
                         </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="*" />
                         </Grid.RowDefinitions>
                         <Grid Grid.Row="0" Grid.Column="0">
-                            <TreeView Name="treeView" TreeViewItem.Expanded="TreeView_Expanded" TreeViewItem.Collapsed="TreeView_Collapsed" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="5,5,5,5">
+                            <TreeView Name="RegTree" TreeViewItem.Expanded="TreeView_Expanded" TreeViewItem.Collapsed="TreeView_Collapsed" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="5,5,5,5">
                                 <TreeView.ItemTemplate>
                                     <HierarchicalDataTemplate DataType="x:Type local:RegTreeViewItem" ItemsSource="{Binding Items}">
                                         <StackPanel Orientation="Horizontal">
@@ -58,6 +59,9 @@
                                     </HierarchicalDataTemplate>
                                 </TreeView.ItemTemplate>
                             </TreeView>
+                        </Grid>
+                        <Grid Grid.Row="0" Grid.Column="1">
+                            <DataGrid Name="RegValTable" />
                         </Grid>
                     </Grid>
                 </TabItem>

@@ -34,7 +34,9 @@ namespace win_prog_course_exp
             root.Items.Add(new RegTreeViewItem(RegTreeViewItemType.FOLDER) { Title = "HKEY_LOCAL_MACHINE", hKey = (IntPtr)0x80000002 });
             root.Items.Add(new RegTreeViewItem(RegTreeViewItemType.FOLDER) { Title = "HKEY_USERS", hKey = (IntPtr)0x80000003 });
             root.Items.Add(new RegTreeViewItem(RegTreeViewItemType.FOLDER) { Title = "HKEY_CURRENT_CONFIG", hKey = (IntPtr)0x80000005 });
-            treeView.Items.Add(root);
+            RegTree.Items.Add(root);
+
+            RegValTable.ItemsSource = RegValueItem.Items;
         }
 
         [DllImport("regzck.dll", EntryPoint = "regList", CallingConvention = CallingConvention.StdCall)]
@@ -71,7 +73,7 @@ namespace win_prog_course_exp
                         {
                             if (!hKeyPredefined.Contains(context.hKey))
                             {
-                                var name = new KeyName() { achKey = context.Title };
+                                var name = new KeyName() { Name = context.Title };
                                 IntPtr output;
                                 regOpen((getParent(tvi).DataContext as RegTreeViewItem).hKey, name, out output);
                                 context.hKey = output;
@@ -93,15 +95,18 @@ namespace win_prog_course_exp
 
                             for (int i = 0; i < cSubKeys; i++)
                             {
-                                context.Items.Add(new RegTreeViewItem(RegTreeViewItemType.FOLDER) { Title = subKeyNames[i].achKey });
+                                context.Items.Add(new RegTreeViewItem(RegTreeViewItemType.FOLDER) { Title = subKeyNames[i].Name });
                             }
 
-                            var regValues = new RegValue[cValues];
+                            RegValueItem.Original.Clear();
+                            RegValueItem.Items.Clear();
                             var regValueStride = Marshal.SizeOf(typeof(RegValue));
                             for (int i = 0; i < cValues; i++)
                             {
                                 var p = new IntPtr(regValuesUnmanaged.ToInt64() + i * regValueStride);
-                                regValues[i] = (RegValue)Marshal.PtrToStructure(p, typeof(RegValue));
+                                var regValue = (RegValue)Marshal.PtrToStructure(p, typeof(RegValue));
+                                RegValueItem.Original.Add(regValue);
+                                RegValueItem.Items.Add(new RegValueItem(regValue));
                             }
                         }
                     }
@@ -145,12 +150,12 @@ namespace win_prog_course_exp
 
         public bool CanExecute(object parameter)
         {
-            return this.canExecute == null || this.canExecute(parameter);
+            return canExecute == null || canExecute(parameter);
         }
 
         public void Execute(object parameter)
         {
-            this.execute(parameter);
+            execute(parameter);
         }
     }
 
@@ -158,14 +163,51 @@ namespace win_prog_course_exp
     public struct KeyName
     {
         [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 255)]
-        public string achKey;
+        public string Name;
+    }
+
+    public enum RegValueType : uint
+    {
+        REG_NONE = 0, REG_SZ = 1, REG_EXPAND_SZ = 2, REG_BINARY = 3, REG_DWORD = 4, REG_DWORD_BIG_ENDIAN = 5,
+        REG_LINK = 6, REG_MULTI_SZ = 7, REG_RESOURCE_LIST = 8, REG_FULL_RESOURCE_DESCRIPTOR = 9,
+        REG_RESOURCE_REQUIREMENTS_LIST = 10, REG_QWORD = 11,
     }
 
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Auto)]
     public struct RegValue
     {
         [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 16383)]
-        public string name;
+        public string Name;
+        public RegValueType Type;
+        public IntPtr Data;
+        public uint CbData;
+    }
+
+    public class RegValueItem
+    {
+        public static List<RegValue> Original { get; set; }
+        public static ObservableCollection<RegValueItem> Items { get; set; }
+
+        static RegValueItem()
+        {
+            Original = new List<RegValue>();
+            Items = new ObservableCollection<RegValueItem>();
+        }
+
+        public RegValueItem(RegValue original)
+        {
+            Name = original.Name;
+            if(Name == "")
+            {
+                Name = "(Default)";
+            }
+            Type = original.Type.ToString("G");
+            Data = "...";
+        }
+
+        public string Name { get; set; }
+        public string Type { get; set; }
+        public string Data { get; set; }
     }
 
     public enum RegTreeViewItemType { COMPUTER, FOLDER, FOLDER_OPEN, }

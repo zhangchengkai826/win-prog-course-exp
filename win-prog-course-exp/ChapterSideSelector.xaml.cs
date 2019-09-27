@@ -26,15 +26,18 @@ namespace win_prog_course_exp
         {
             InitializeComponent();
 
-            ChapterSideSelectorItem.Items = new ObservableCollection<ChapterSideSelectorItem>();
             ChapterSideSelectorItem.Items.Add(new ChapterSideSelectorItem() { Title = "实验一" });
             ChapterSideSelectorItem.Items.Add(new ChapterSideSelectorItem() { Title = "实验二" });
             ChapterSideSelectorItem.Items.Add(new ChapterSideSelectorItem() { Title = "实验三" });
             chapterSideSelector.ItemsSource = ChapterSideSelectorItem.Items;
-            ChapterSideSelectorItem.CurOnId = 1;
+            ChapterSideSelectorItem.CurOnId = 0;
         }
         public class ChapterSideSelectorItem : INotifyPropertyChanged
         {
+            static ChapterSideSelectorItem()
+            {
+                Items = new ObservableCollection<ChapterSideSelectorItem>();
+            }
             public ChapterSideSelectorItem()
             {
                 IsOn = false;

@@ -3,6 +3,7 @@
 
 std::vector<KeyName> vSubKeyNames;
 std::vector<RegValue> vRegValues;
+std::vector<BYTE> vRegValDataBuf;
 
 void __stdcall regList(HKEY hKey, KeyName **subKeyNames, int *pcSubKeys, RegValue **regValues, int *pcValues) {
 	DWORD    cbName;   // size of name string (subkey)
@@ -57,18 +58,21 @@ void __stdcall regList(HKEY hKey, KeyName **subKeyNames, int *pcSubKeys, RegValu
 	*pcSubKeys = cRealSubKeys;
 	
 	vRegValues.resize(cValues);
+	vRegValDataBuf.resize((UINT64)cValues * cbMaxValueData);
 	int cRealValues = 0;
 	// Enumerate the key values. 
 	for (i = 0; i < cValues; i++)
 	{
 		cchValue = MAX_VALUE_NAME;
+		vRegValues[cRealValues].data = vRegValDataBuf.data() + (UINT64)cbMaxValueData * cRealValues;
+		vRegValues[cRealValues].cbData = cbMaxValueData;
 		retCode = RegEnumValue(hKey, i,
 			vRegValues[cRealValues].name,
 			&cchValue,
 			NULL,
-			NULL,
-			NULL,
-			NULL);
+			&vRegValues[cRealValues].type,
+			vRegValues[cRealValues].data,
+			&vRegValues[cRealValues].cbData);
 
 		if (retCode == ERROR_SUCCESS)
 		{

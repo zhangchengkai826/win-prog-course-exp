@@ -8,11 +8,14 @@ const int MAX_KEY_LENGTH = 255;
 const int MAX_VALUE_NAME = 16383;
 
 typedef struct tagKeyName {
-	TCHAR    achKey[MAX_KEY_LENGTH];   // buffer for subkey name
+	TCHAR achKey[MAX_KEY_LENGTH];   // buffer for subkey name
 } KeyName;
 
 typedef struct tagRegValue {
-	TCHAR    name[MAX_VALUE_NAME];
+	TCHAR name[MAX_VALUE_NAME];
+	DWORD type;
+	BYTE *data;
+	DWORD cbData;
 } RegValue;
 
 extern "C" {
