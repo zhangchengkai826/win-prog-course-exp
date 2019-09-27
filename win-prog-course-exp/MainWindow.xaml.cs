@@ -38,7 +38,7 @@ namespace win_prog_course_exp
         }
 
         [DllImport("regzck.dll", EntryPoint = "regList", CallingConvention = CallingConvention.StdCall)]
-        public static extern void regList(IntPtr hKey, out IntPtr subKeyNames, out int pcSubKeys);
+        public static extern void regList(IntPtr hKey, out IntPtr subKeyNames, out int pcSubKeys, out IntPtr regValues, out int pcValues);
 
         [DllImport("regzck.dll", EntryPoint = "regOpen", CallingConvention = CallingConvention.StdCall)]
         public static extern void regOpen(IntPtr parentKey, KeyName name, out IntPtr output);
@@ -79,7 +79,9 @@ namespace win_prog_course_exp
 
                             IntPtr subKeyNamesUnmanaged;
                             int cSubKeys;
-                            regList(context.hKey, out subKeyNamesUnmanaged, out cSubKeys);
+                            IntPtr regValuesUnmanaged;
+                            int cValues;
+                            regList(context.hKey, out subKeyNamesUnmanaged, out cSubKeys, out regValuesUnmanaged, out cValues);
 
                             var subKeyNames = new KeyName[cSubKeys];
                             var keyNameStride = Marshal.SizeOf(typeof(KeyName));
@@ -92,6 +94,14 @@ namespace win_prog_course_exp
                             for (int i = 0; i < cSubKeys; i++)
                             {
                                 context.Items.Add(new RegTreeViewItem(RegTreeViewItemType.FOLDER) { Title = subKeyNames[i].achKey });
+                            }
+
+                            var regValues = new RegValue[cValues];
+                            var regValueStride = Marshal.SizeOf(typeof(RegValue));
+                            for (int i = 0; i < cValues; i++)
+                            {
+                                var p = new IntPtr(regValuesUnmanaged.ToInt64() + i * regValueStride);
+                                regValues[i] = (RegValue)Marshal.PtrToStructure(p, typeof(RegValue));
                             }
                         }
                     }
@@ -149,6 +159,13 @@ namespace win_prog_course_exp
     {
         [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 255)]
         public string achKey;
+    }
+
+    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Auto)]
+    public struct RegValue
+    {
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 16383)]
+        public string name;
     }
 
     public enum RegTreeViewItemType { COMPUTER, FOLDER, FOLDER_OPEN, }

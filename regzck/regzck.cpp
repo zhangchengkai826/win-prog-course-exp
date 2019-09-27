@@ -2,9 +2,11 @@
 #include "regzck.h"
 
 std::vector<KeyName> vSubKeyNames;
+std::vector<RegValue> vRegValues;
 
-void __stdcall regList(HKEY hKey, KeyName **subKeyNames, int *pcSubKeys) {
-	DWORD    cbName;                   // size of name string 
+void __stdcall regList(HKEY hKey, KeyName **subKeyNames, int *pcSubKeys, RegValue **regValues, int *pcValues) {
+	DWORD    cbName;   // size of name string (subkey)
+	DWORD    cchValue;		// size of name string (value)
 	TCHAR    achClass[MAX_PATH] = TEXT("");  // buffer for class name 
 	DWORD    cchClassName = MAX_PATH;  // size of class string 
 	DWORD    cSubKeys = 0;               // number of subkeys 
@@ -17,11 +19,6 @@ void __stdcall regList(HKEY hKey, KeyName **subKeyNames, int *pcSubKeys) {
 	FILETIME ftLastWriteTime;      // last write time 
 
 	DWORD i, retCode;
-
-	HKEY hkey2 = HKEY_CLASSES_ROOT;
-
-	//TCHAR  achValue[MAX_VALUE_NAME];
-	DWORD cchValue = MAX_VALUE_NAME;
 
 	// Get the class name and the value count. 
 	retCode = RegQueryInfoKey(
@@ -39,52 +36,47 @@ void __stdcall regList(HKEY hKey, KeyName **subKeyNames, int *pcSubKeys) {
 		&ftLastWriteTime);       // last write time 
 
 	// Enumerate the subkeys, until RegEnumKeyEx fails.
-
-	if (cSubKeys)
+	vSubKeyNames.resize(cSubKeys);
+	int cRealSubKeys = 0;
+	for (i = 0; i < cSubKeys; i++)
 	{
-		vSubKeyNames.resize(cSubKeys);
-		int cRealSubKeys = 0;
-		for (i = 0; i < cSubKeys; i++)
+		cbName = MAX_KEY_LENGTH;
+		retCode = RegEnumKeyEx(hKey, i,
+			vSubKeyNames[cRealSubKeys].achKey,
+			&cbName,
+			NULL,
+			NULL,
+			NULL,
+			&ftLastWriteTime);
+		if (retCode == ERROR_SUCCESS)
 		{
-			cbName = MAX_KEY_LENGTH;
-			retCode = RegEnumKeyEx(hKey, i,
-				vSubKeyNames[cRealSubKeys].achKey,
-				&cbName,
-				NULL,
-				NULL,
-				NULL,
-				&ftLastWriteTime);
-			if (retCode == ERROR_SUCCESS)
-			{
-				cRealSubKeys++;
-			}
+			cRealSubKeys++;
 		}
-		*subKeyNames = vSubKeyNames.data();
-		*pcSubKeys = cRealSubKeys;
 	}
-
+	*subKeyNames = vSubKeyNames.data();
+	*pcSubKeys = cRealSubKeys;
+	
+	vRegValues.resize(cValues);
+	int cRealValues = 0;
 	// Enumerate the key values. 
+	for (i = 0; i < cValues; i++)
+	{
+		cchValue = MAX_VALUE_NAME;
+		retCode = RegEnumValue(hKey, i,
+			vRegValues[cRealValues].name,
+			&cchValue,
+			NULL,
+			NULL,
+			NULL,
+			NULL);
 
-	//if (cValues)
-	//{
-	//	for (i = 0, retCode = ERROR_SUCCESS; i < cValues; i++)
-	//	{
-	//		cchValue = MAX_VALUE_NAME;
-	//		achValue[0] = '\0';
-	//		retCode = RegEnumValue(hKey, i,
-	//			achValue,
-	//			&cchValue,
-	//			NULL,
-	//			NULL,
-	//			NULL,
-	//			NULL);
-
-	//		if (retCode == ERROR_SUCCESS)
-	//		{
-	//			_tprintf(TEXT("(%d) %s\n"), i + 1, achValue);
-	//		}
-	//	}
-	//}
+		if (retCode == ERROR_SUCCESS)
+		{
+			cRealValues++;
+		}
+	}
+	*regValues = vRegValues.data();
+	*pcValues = cRealValues;
 }
 
 void __stdcall regOpen(HKEY parentKey, KeyName name, HKEY* output) {
