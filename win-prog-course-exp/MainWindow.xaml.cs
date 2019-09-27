@@ -66,7 +66,7 @@ namespace win_prog_course_exp
                 {
                     if(context.Type != RegTreeViewItemType.COMPUTER)
                     {
-                        context.Icon = new BitmapImage(new Uri("Resources/icon/folder-open.png", UriKind.Relative));
+                        context.Type = RegTreeViewItemType.FOLDER_OPEN;
                         if (context.Items.Count == 0)
                         {
                             if (!hKeyPredefined.Contains(context.hKey))
@@ -109,7 +109,7 @@ namespace win_prog_course_exp
                 {
                     if (context.Type != RegTreeViewItemType.COMPUTER)
                     {
-                        context.Icon = new BitmapImage(new Uri("Resources/icon/folder.png", UriKind.Relative));
+                        context.Type = RegTreeViewItemType.FOLDER;
                     }
                 }
             }
@@ -151,7 +151,7 @@ namespace win_prog_course_exp
         public string achKey;
     }
 
-    public enum RegTreeViewItemType { COMPUTER, FOLDER, }
+    public enum RegTreeViewItemType { COMPUTER, FOLDER, FOLDER_OPEN, }
 
     public class RegTreeViewItem : INotifyPropertyChanged
     {
@@ -159,38 +159,22 @@ namespace win_prog_course_exp
         {
             Items = new ObservableCollection<RegTreeViewItem>();
             this.Type = Type;
-
-            switch (Type)
-            {
-                case RegTreeViewItemType.COMPUTER:
-                    {
-                        Icon = new BitmapImage(new Uri("Resources/icon/laptop.png", UriKind.Relative));
-                        break;
-                    }
-                case RegTreeViewItemType.FOLDER:
-                    {
-                        Icon = new BitmapImage(new Uri("Resources/icon/folder.png", UriKind.Relative));
-                        break;
-                    }
-            }
         }
 
         public ObservableCollection<RegTreeViewItem> Items { get; set; }
 
         public string Title { get; set; }
 
-        private ImageSource icon;
-        public ImageSource Icon
+        private RegTreeViewItemType type;
+        public RegTreeViewItemType Type
         {
-            get { return icon; }
+            get { return type; }
             set
             {
-                icon = value;
-                OnPropertyChanged("Icon");
+                type = value;
+                OnPropertyChanged("Type");
             }
         }
-
-        public RegTreeViewItemType Type { get; set; }
 
         public IntPtr hKey { get; set; }
 

@@ -36,7 +36,23 @@
                                 <TreeView.ItemTemplate>
                                     <HierarchicalDataTemplate DataType="x:Type local:RegTreeViewItem" ItemsSource="{Binding Items}">
                                         <StackPanel Orientation="Horizontal">
-                                            <Image Width="22" Height="22" Margin="0,0,5,-5" Source="{Binding Icon}" />
+                                            <Image Width="22" Height="22" Margin="0,0,5,-5">
+                                                <Image.Style>
+                                                    <Style TargetType="Image">
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding Type}" Value="{x:Static local:RegTreeViewItemType.COMPUTER}">
+                                                                <Setter Property="Source" Value="Resources/icon/laptop.png" />
+                                                            </DataTrigger>
+                                                            <DataTrigger Binding="{Binding Type}" Value="{x:Static local:RegTreeViewItemType.FOLDER}">
+                                                                <Setter Property="Source" Value="Resources/icon/folder.png" />
+                                                            </DataTrigger>
+                                                            <DataTrigger Binding="{Binding Type}" Value="{x:Static local:RegTreeViewItemType.FOLDER_OPEN}">
+                                                                <Setter Property="Source" Value="Resources/icon/folder-open.png" />
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </Image.Style>
+                                            </Image>
                                             <TextBlock FontSize="22" Text="{Binding Title}" />
                                         </StackPanel>
                                     </HierarchicalDataTemplate>
