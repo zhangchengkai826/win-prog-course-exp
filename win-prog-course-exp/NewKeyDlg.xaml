@@ -16,8 +16,8 @@
         </Grid.RowDefinitions>
         <Grid Grid.Row="0" Grid.Column="0">
             <StackPanel Orientation="Vertical" VerticalAlignment="Center">
-                <TextBlock Text="Key Name" HorizontalAlignment="Center" />
-                <TextBox HorizontalAlignment="Center" MinWidth="150" />
+                <TextBlock Text="Please enter a new key name:" HorizontalAlignment="Center" Margin="0,0,0,7.5" />
+                <TextBox Name="InputName" TextAlignment="Center" MaxLength="16" MaxLines="1" Width="150"/>
             </StackPanel>
         </Grid>
         <Grid Grid.Row="1" Grid.Column="0">

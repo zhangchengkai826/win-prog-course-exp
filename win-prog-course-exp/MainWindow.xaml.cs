@@ -42,22 +42,8 @@ namespace win_prog_course_exp
         [DllImport("regzck.dll", EntryPoint = "regQuery", CallingConvention = CallingConvention.StdCall)]
         public static extern void regQuery(IntPtr hKey, out IntPtr subKeyNames, out int pcSubKeys, out IntPtr regValues, out int pcValues);
 
-        [DllImport("regzck.dll", EntryPoint = "regOpen", CallingConvention = CallingConvention.StdCall)]
-        public static extern void regOpen(IntPtr parentKey, KeyName name, out IntPtr output);
-
         [DllImport("regzck.dll", EntryPoint = "regNewKey", CallingConvention = CallingConvention.StdCall)]
         public static extern void regNewKey(IntPtr parentKey, KeyName name, out IntPtr newKey);
-
-        private static TreeViewItem getParent(TreeViewItem item)
-        {
-            var parent = VisualTreeHelper.GetParent(item);
-            while (!(parent is TreeViewItem))
-            {
-                parent = VisualTreeHelper.GetParent(parent);
-            }
-
-            return parent as TreeViewItem;
-        }
 
         private void RegTree_Expanded(object sender, RoutedEventArgs e)
         {
@@ -70,21 +56,9 @@ namespace win_prog_course_exp
                     if(context.Type != RegTreeViewItemType.COMPUTER)
                     {
                         context.Type = RegTreeViewItemType.FOLDER_OPEN;
-                        if (!context.hKeyOpened)
+                        if(!context.openKey())
                         {
-                            var name = new KeyName() { Name = context.Title };
-                            IntPtr output;
-                            regOpen((getParent(tvi).DataContext as RegTreeViewItem).hKey, name, out output);
-                            context.hKey = output;
-                            if (context.hKey != (IntPtr)0)
-                            {
-                                context.hKeyOpened = true;
-                            }
-                            else
-                            {
-                                MessageBox.Show(string.Format("Cannot open HKEY: {0}.", context.Title));
-                                return;
-                            }
+                            return;
                         }
 
                         if(!context.hKeyQueried)
@@ -105,7 +79,7 @@ namespace win_prog_course_exp
 
                             for (int i = 0; i < cSubKeys; i++)
                             {
-                                context.Items.Add(new RegTreeViewItem(RegTreeViewItemType.FOLDER) { Title = subKeyNames[i].Name });
+                                context.Items.Add(new RegTreeViewItem(RegTreeViewItemType.FOLDER) { Title = subKeyNames[i].Name, Parent = context });
                             }
 
                             var regValueStride = Marshal.SizeOf(typeof(RegValue));
@@ -160,10 +134,10 @@ namespace win_prog_course_exp
             {
                 case "RegTreeItemCtxMenu_New_Key":
                     {
-                        NewKeyDlg newKeyDlg = new NewKeyDlg();
+                        var newKeyDlg = new NewKeyDlg();
                         if(newKeyDlg.ShowDialog() == true)
                         {
-
+                            // TODO
                         }
                         break;
                     }
@@ -310,6 +284,7 @@ namespace win_prog_course_exp
         public bool hKeyQueried { get; set; }
         public List<RegValue> OriginalValues { get; set; }
         public ObservableCollection<RegValueItem> Values { get; set; }
+        public RegTreeViewItem Parent { get; set; }
 
         public event PropertyChangedEventHandler PropertyChanged;
         public void OnPropertyChanged(string propertyName)
@@ -319,6 +294,32 @@ namespace win_prog_course_exp
                 return;
             }
             PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        [DllImport("regzck.dll", EntryPoint = "regOpen", CallingConvention = CallingConvention.StdCall)]
+        public static extern void regOpen(IntPtr parentKey, KeyName name, out IntPtr output);
+        public bool openKey()
+        {
+            if(hKeyOpened)
+            {
+                return true;
+            }
+
+            var name = new KeyName() { Name = Title };
+            IntPtr output;
+            regOpen(Parent.hKey, name, out output);
+            hKey = output;
+            if (hKey != (IntPtr)0)
+            {
+                hKeyOpened = true;
+            }
+            else
+            {
+                MessageBox.Show(string.Format("Cannot open HKEY: {0}.", Title));
+                return false;
+            }
+
+            return true;
         }
     }
 }

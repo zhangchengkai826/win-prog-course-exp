@@ -23,7 +23,6 @@ namespace win_prog_course_exp
         {
             InitializeComponent();
         }
-
         private void BtnOK_Click(object sender, RoutedEventArgs e)
         {
             DialogResult = true;
