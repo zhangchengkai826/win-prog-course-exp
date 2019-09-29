@@ -149,6 +149,31 @@ namespace win_prog_course_exp
                 }
             }
         }
+
+        private void RegTreeItemCtxMenu_Click(object sender, RoutedEventArgs e)
+        {
+            var menuItem = sender as MenuItem;
+            switch(menuItem.Name)
+            {
+                case "RegTreeItemCtxMenu_New_Key":
+                    {
+                        
+                        break;
+                    }
+                case "RegTreeItemCtxMenu_New_Str":
+                    {
+                        break;
+                    }
+                case "RegTreeItemCtxMenu_Del":
+                    {
+                        break;
+                    }
+                case "RegTreeItemCtxMenu_Rename":
+                    {
+                        break;
+                    }
+            }
+        }
     }
 
     public class RelayCommand : ICommand

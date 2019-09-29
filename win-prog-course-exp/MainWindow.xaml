@@ -37,6 +37,27 @@
                                 <TreeView.ItemTemplate>
                                     <HierarchicalDataTemplate DataType="x:Type local:RegTreeViewItem" ItemsSource="{Binding Items}">
                                         <StackPanel Orientation="Horizontal">
+                                            <StackPanel.ContextMenu>
+                                                <ContextMenu Name="RegTreeItemCtxMenu">
+                                                    <ContextMenu.ItemsPanel>
+                                                        <ItemsPanelTemplate>
+                                                            <StackPanel Margin="-20,0,0,0" Background="White" />
+                                                        </ItemsPanelTemplate>
+                                                    </ContextMenu.ItemsPanel>
+                                                    <MenuItem Header="New">
+                                                        <MenuItem.ItemsPanel>
+                                                            <ItemsPanelTemplate>
+                                                                <StackPanel Margin="-20,0,0,0" Background="White" />
+                                                            </ItemsPanelTemplate>
+                                                        </MenuItem.ItemsPanel>
+                                                        <MenuItem Header="Key" Name="RegTreeItemCtxMenu_New_Key" Click="RegTreeItemCtxMenu_Click" />
+                                                        <Separator />
+                                                        <MenuItem Header="String Value" Name="RegTreeItemCtxMenu_New_Str" Click="RegTreeItemCtxMenu_Click" />
+                                                    </MenuItem>
+                                                    <MenuItem Header="Delete" Name="RegTreeItemCtxMenu_Del" Click="RegTreeItemCtxMenu_Click" />
+                                                    <MenuItem Header="Rename" Name="RegTreeItemCtxMenu_Rename" Click="RegTreeItemCtxMenu_Click" />
+                                                </ContextMenu>
+                                            </StackPanel.ContextMenu>
                                             <Image Width="22" Height="22" Margin="0,0,5,-5">
                                                 <Image.Style>
                                                     <Style TargetType="Image">
@@ -61,7 +82,7 @@
                             </TreeView>
                         </Grid>
                         <Grid Grid.Row="0" Grid.Column="1">
-                            <DataGrid Name="RegValTable" />
+                            <DataGrid Name="RegValTable" IsReadOnly="True" CanUserAddRows="False" CanUserDeleteRows="False" CanUserReorderColumns="False" CanUserResizeRows="False" />
                         </Grid>
                     </Grid>
                 </TabItem>
