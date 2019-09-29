@@ -1,4 +1,4 @@
 LIBRARY regzck
 EXPORTS
-	regList
+	regQuery
 	regOpen

@@ -5,7 +5,7 @@ std::vector<KeyName> vSubKeyNames;
 std::vector<RegValue> vRegValues;
 std::vector<BYTE> vRegValDataBuf;
 
-void __stdcall regList(HKEY hKey, KeyName **subKeyNames, int *pcSubKeys, RegValue **regValues, int *pcValues) {
+void __stdcall regQuery(HKEY hKey, KeyName **subKeyNames, int *pcSubKeys, RegValue **regValues, int *pcValues) {
 	DWORD    cbName;   // size of name string (subkey)
 	DWORD    cchValue;		// size of name string (value)
 	TCHAR    achClass[MAX_PATH] = TEXT("");  // buffer for class name 
@@ -85,6 +85,6 @@ void __stdcall regList(HKEY hKey, KeyName **subKeyNames, int *pcSubKeys, RegValu
 
 void __stdcall regOpen(HKEY parentKey, KeyName name, HKEY* output) {
 	if (RegOpenKeyEx(parentKey, name.achKey, 0, KEY_READ, output) != ERROR_SUCCESS) {
-		// log error
+		*output = 0;
 	}
 }

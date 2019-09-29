@@ -29,23 +29,21 @@ namespace win_prog_course_exp
             InitializeComponent();
 
             var root = new RegTreeViewItem(RegTreeViewItemType.COMPUTER) { Title = "Computer" };
-            root.Items.Add(new RegTreeViewItem(RegTreeViewItemType.FOLDER) { Title = "HKEY_CLASSES_ROOT", hKey = (IntPtr)0x80000000 });
-            root.Items.Add(new RegTreeViewItem(RegTreeViewItemType.FOLDER) { Title = "HKEY_CURRENT_USER", hKey = (IntPtr)0x80000001 });
-            root.Items.Add(new RegTreeViewItem(RegTreeViewItemType.FOLDER) { Title = "HKEY_LOCAL_MACHINE", hKey = (IntPtr)0x80000002 });
-            root.Items.Add(new RegTreeViewItem(RegTreeViewItemType.FOLDER) { Title = "HKEY_USERS", hKey = (IntPtr)0x80000003 });
-            root.Items.Add(new RegTreeViewItem(RegTreeViewItemType.FOLDER) { Title = "HKEY_CURRENT_CONFIG", hKey = (IntPtr)0x80000005 });
+            root.Items.Add(new RegTreeViewItem(RegTreeViewItemType.FOLDER, (IntPtr)0x80000000) { Title = "HKEY_CLASSES_ROOT" });
+            root.Items.Add(new RegTreeViewItem(RegTreeViewItemType.FOLDER, (IntPtr)0x80000001) { Title = "HKEY_CURRENT_USER" });
+            root.Items.Add(new RegTreeViewItem(RegTreeViewItemType.FOLDER, (IntPtr)0x80000002) { Title = "HKEY_LOCAL_MACHINE" });
+            root.Items.Add(new RegTreeViewItem(RegTreeViewItemType.FOLDER, (IntPtr)0x80000003) { Title = "HKEY_USERS" });
+            root.Items.Add(new RegTreeViewItem(RegTreeViewItemType.FOLDER, (IntPtr)0x80000005) { Title = "HKEY_CURRENT_CONFIG" });
             RegTree.Items.Add(root);
 
             RegValTable.ItemsSource = RegValueItem.Items;
         }
 
-        [DllImport("regzck.dll", EntryPoint = "regList", CallingConvention = CallingConvention.StdCall)]
-        public static extern void regList(IntPtr hKey, out IntPtr subKeyNames, out int pcSubKeys, out IntPtr regValues, out int pcValues);
+        [DllImport("regzck.dll", EntryPoint = "regQuery", CallingConvention = CallingConvention.StdCall)]
+        public static extern void regQuery(IntPtr hKey, out IntPtr subKeyNames, out int pcSubKeys, out IntPtr regValues, out int pcValues);
 
         [DllImport("regzck.dll", EntryPoint = "regOpen", CallingConvention = CallingConvention.StdCall)]
         public static extern void regOpen(IntPtr parentKey, KeyName name, out IntPtr output);
-
-        public static readonly IntPtr[] hKeyPredefined = { (IntPtr)0x80000000, (IntPtr)0x80000001, (IntPtr)0x80000002, (IntPtr)0x80000003, (IntPtr)0x80000005 };
 
         private static TreeViewItem getParent(TreeViewItem item)
         {
@@ -69,21 +67,30 @@ namespace win_prog_course_exp
                     if(context.Type != RegTreeViewItemType.COMPUTER)
                     {
                         context.Type = RegTreeViewItemType.FOLDER_OPEN;
-                        if (context.Items.Count == 0)
+                        if (!context.hKeyOpened)
                         {
-                            if (!hKeyPredefined.Contains(context.hKey))
+                            var name = new KeyName() { Name = context.Title };
+                            IntPtr output;
+                            regOpen((getParent(tvi).DataContext as RegTreeViewItem).hKey, name, out output);
+                            context.hKey = output;
+                            if (context.hKey != (IntPtr)0)
                             {
-                                var name = new KeyName() { Name = context.Title };
-                                IntPtr output;
-                                regOpen((getParent(tvi).DataContext as RegTreeViewItem).hKey, name, out output);
-                                context.hKey = output;
+                                context.hKeyOpened = true;
                             }
+                            else
+                            {
+                                MessageBox.Show(string.Format("Cannot open HKEY: {0}.", context.Title));
+                                return;
+                            }
+                        }
 
+                        if(!context.hKeyQueried)
+                        {
                             IntPtr subKeyNamesUnmanaged;
                             int cSubKeys;
                             IntPtr regValuesUnmanaged;
                             int cValues;
-                            regList(context.hKey, out subKeyNamesUnmanaged, out cSubKeys, out regValuesUnmanaged, out cValues);
+                            regQuery(context.hKey, out subKeyNamesUnmanaged, out cSubKeys, out regValuesUnmanaged, out cValues);
 
                             var subKeyNames = new KeyName[cSubKeys];
                             var keyNameStride = Marshal.SizeOf(typeof(KeyName));
@@ -108,6 +115,8 @@ namespace win_prog_course_exp
                                 RegValueItem.Original.Add(regValue);
                                 RegValueItem.Items.Add(new RegValueItem(regValue));
                             }
+
+                            context.hKeyQueried = true;
                         }
                     }
                 }
@@ -214,11 +223,15 @@ namespace win_prog_course_exp
 
     public class RegTreeViewItem : INotifyPropertyChanged
     {
-        public RegTreeViewItem(RegTreeViewItemType Type)
+        public RegTreeViewItem(RegTreeViewItemType Type, IntPtr hKey)
         {
             Items = new ObservableCollection<RegTreeViewItem>();
             this.Type = Type;
+            this.hKey = hKey;
+            hKeyOpened = hKeyPredefined.Contains(hKey) ? true : false;
+            hKeyQueried = false;
         }
+        public RegTreeViewItem(RegTreeViewItemType Type) : this(Type, (IntPtr)0) { }
 
         public ObservableCollection<RegTreeViewItem> Items { get; set; }
 
@@ -235,7 +248,11 @@ namespace win_prog_course_exp
             }
         }
 
+        public static readonly IntPtr[] hKeyPredefined = { (IntPtr)0x80000000, (IntPtr)0x80000001, (IntPtr)0x80000002, (IntPtr)0x80000003, (IntPtr)0x80000005 };
+
         public IntPtr hKey { get; set; }
+        public bool hKeyOpened { get; set; }
+        public bool hKeyQueried { get; set; }
 
         public event PropertyChangedEventHandler PropertyChanged;
         public void OnPropertyChanged(string propertyName)
