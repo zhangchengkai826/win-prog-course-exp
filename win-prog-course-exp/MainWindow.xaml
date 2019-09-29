@@ -33,7 +33,7 @@
                             <RowDefinition Height="*" />
                         </Grid.RowDefinitions>
                         <Grid Grid.Row="0" Grid.Column="0">
-                            <TreeView Name="RegTree" TreeViewItem.Expanded="TreeView_Expanded" TreeViewItem.Collapsed="TreeView_Collapsed" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="5,5,5,5">
+                            <TreeView Name="RegTree" TreeViewItem.Selected="RegTree_Selected" TreeViewItem.Expanded="RegTree_Expanded" TreeViewItem.Collapsed="RegTree_Collapsed" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="5,5,5,5">
                                 <TreeView.ItemTemplate>
                                     <HierarchicalDataTemplate DataType="x:Type local:RegTreeViewItem" ItemsSource="{Binding Items}">
                                         <StackPanel Orientation="Horizontal">

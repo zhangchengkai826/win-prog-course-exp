@@ -36,7 +36,7 @@ namespace win_prog_course_exp
             root.Items.Add(new RegTreeViewItem(RegTreeViewItemType.FOLDER, (IntPtr)0x80000005) { Title = "HKEY_CURRENT_CONFIG" });
             RegTree.Items.Add(root);
 
-            RegValTable.ItemsSource = RegValueItem.Items;
+            RegValTable.ItemsSource = RegValueItem.Empty;
         }
 
         [DllImport("regzck.dll", EntryPoint = "regQuery", CallingConvention = CallingConvention.StdCall)]
@@ -56,7 +56,7 @@ namespace win_prog_course_exp
             return parent as TreeViewItem;
         }
 
-        private void TreeView_Expanded(object sender, RoutedEventArgs e)
+        private void RegTree_Expanded(object sender, RoutedEventArgs e)
         {
             var tvi = e.OriginalSource as TreeViewItem;
             if (tvi != null)
@@ -105,15 +105,13 @@ namespace win_prog_course_exp
                                 context.Items.Add(new RegTreeViewItem(RegTreeViewItemType.FOLDER) { Title = subKeyNames[i].Name });
                             }
 
-                            RegValueItem.Original.Clear();
-                            RegValueItem.Items.Clear();
                             var regValueStride = Marshal.SizeOf(typeof(RegValue));
                             for (int i = 0; i < cValues; i++)
                             {
                                 var p = new IntPtr(regValuesUnmanaged.ToInt64() + i * regValueStride);
                                 var regValue = (RegValue)Marshal.PtrToStructure(p, typeof(RegValue));
-                                RegValueItem.Original.Add(regValue);
-                                RegValueItem.Items.Add(new RegValueItem(regValue));
+                                context.OriginalValues.Add(regValue);
+                                context.Values.Add(new RegValueItem(regValue));
                             }
 
                             context.hKeyQueried = true;
@@ -123,7 +121,7 @@ namespace win_prog_course_exp
             }
         }
 
-        private void TreeView_Collapsed(object sender, RoutedEventArgs e)
+        private void RegTree_Collapsed(object sender, RoutedEventArgs e)
         {
             var tvi = e.OriginalSource as TreeViewItem;
             if (tvi != null)
@@ -135,6 +133,19 @@ namespace win_prog_course_exp
                     {
                         context.Type = RegTreeViewItemType.FOLDER;
                     }
+                }
+            }
+        }
+
+        private void RegTree_Selected(object sender, RoutedEventArgs e)
+        {
+            var tvi = e.OriginalSource as TreeViewItem;
+            if (tvi != null)
+            {
+                var context = tvi.DataContext as RegTreeViewItem;
+                if (context != null)
+                {
+                    RegValTable.ItemsSource = context.Values;
                 }
             }
         }
@@ -194,13 +205,11 @@ namespace win_prog_course_exp
 
     public class RegValueItem
     {
-        public static List<RegValue> Original { get; set; }
-        public static ObservableCollection<RegValueItem> Items { get; set; }
+        public static ObservableCollection<RegValueItem> Empty { get; set; }
 
         static RegValueItem()
         {
-            Original = new List<RegValue>();
-            Items = new ObservableCollection<RegValueItem>();
+            Empty = new ObservableCollection<RegValueItem>();
         }
 
         public RegValueItem(RegValue original)
@@ -242,6 +251,8 @@ namespace win_prog_course_exp
             this.hKey = hKey;
             hKeyOpened = hKeyPredefined.Contains(hKey) ? true : false;
             hKeyQueried = false;
+            OriginalValues = new List<RegValue>();
+            Values = new ObservableCollection<RegValueItem>();
         }
         public RegTreeViewItem(RegTreeViewItemType Type) : this(Type, (IntPtr)0) { }
 
@@ -265,6 +276,8 @@ namespace win_prog_course_exp
         public IntPtr hKey { get; set; }
         public bool hKeyOpened { get; set; }
         public bool hKeyQueried { get; set; }
+        public List<RegValue> OriginalValues { get; set; }
+        public ObservableCollection<RegValueItem> Values { get; set; }
 
         public event PropertyChangedEventHandler PropertyChanged;
         public void OnPropertyChanged(string propertyName)
