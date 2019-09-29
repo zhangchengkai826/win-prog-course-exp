@@ -211,7 +211,19 @@ namespace win_prog_course_exp
                 Name = "(Default)";
             }
             Type = original.Type.ToString("G");
-            Data = "...";
+            switch(original.Type)
+            {
+                case RegValueType.REG_SZ:
+                    {
+                        Data = Marshal.PtrToStringAuto(original.Data);
+                        break;
+                    }
+                default:
+                    {
+                        Data = "(preview unavailable)";
+                        break;
+                    }
+            }
         }
 
         public string Name { get; set; }
