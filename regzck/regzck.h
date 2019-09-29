@@ -21,4 +21,5 @@ typedef struct tagRegValue {
 extern "C" {
 	void __stdcall regQuery(HKEY hKey, KeyName** subKeyNames, int* pcSubKeys, RegValue** regValues, int* pcValues);
 	void __stdcall regOpen(HKEY parentKey, KeyName name, HKEY* output);
+	void __stdcall regNewKey(HKEY parentKey, KeyName name, HKEY* newKey);
 }

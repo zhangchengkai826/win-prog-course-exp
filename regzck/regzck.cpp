@@ -88,3 +88,7 @@ void __stdcall regOpen(HKEY parentKey, KeyName name, HKEY* output) {
 		*output = 0;
 	}
 }
+
+void __stdcall regNewKey(HKEY parentKey, KeyName name, HKEY *newKey) {
+	RegCreateKey(parentKey, name.achKey, newKey);
+}

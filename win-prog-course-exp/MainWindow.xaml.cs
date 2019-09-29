@@ -45,6 +45,9 @@ namespace win_prog_course_exp
         [DllImport("regzck.dll", EntryPoint = "regOpen", CallingConvention = CallingConvention.StdCall)]
         public static extern void regOpen(IntPtr parentKey, KeyName name, out IntPtr output);
 
+        [DllImport("regzck.dll", EntryPoint = "regNewKey", CallingConvention = CallingConvention.StdCall)]
+        public static extern void regNewKey(IntPtr parentKey, KeyName name, out IntPtr newKey);
+
         private static TreeViewItem getParent(TreeViewItem item)
         {
             var parent = VisualTreeHelper.GetParent(item);
@@ -157,7 +160,11 @@ namespace win_prog_course_exp
             {
                 case "RegTreeItemCtxMenu_New_Key":
                     {
-                        
+                        NewKeyDlg newKeyDlg = new NewKeyDlg();
+                        if(newKeyDlg.ShowDialog() == true)
+                        {
+
+                        }
                         break;
                     }
                 case "RegTreeItemCtxMenu_New_Str":

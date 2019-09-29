@@ -2,3 +2,4 @@ LIBRARY regzck
 EXPORTS
 	regQuery
 	regOpen
+	regNewKey
