@@ -132,7 +132,7 @@ namespace win_prog_course_exp
             var newKeyDlg = new NewKeyDlg();
             if(newKeyDlg.ShowDialog() == true)
             {
-                // TODO
+                
             }
         }
     }
