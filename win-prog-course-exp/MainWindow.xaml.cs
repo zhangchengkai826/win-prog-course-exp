@@ -41,9 +41,10 @@ namespace win_prog_course_exp
 
         [DllImport("regzck.dll", EntryPoint = "regQuery", CallingConvention = CallingConvention.StdCall)]
         public static extern void regQuery(IntPtr hKey, out IntPtr subKeyNames, out int pcSubKeys, out IntPtr regValues, out int pcValues);
-
         [DllImport("regzck.dll", EntryPoint = "regNewKey", CallingConvention = CallingConvention.StdCall)]
         public static extern void regNewKey(IntPtr parentKey, KeyName name, out IntPtr newKey);
+        [DllImport("regzck.dll", EntryPoint = "regDelKey", CallingConvention = CallingConvention.StdCall)]
+        public static extern void regDelKey(IntPtr parentKey, KeyName name);
 
         private void RegTree_Expanded(object sender, RoutedEventArgs e)
         {
@@ -132,9 +133,28 @@ namespace win_prog_course_exp
             var newKeyDlg = new NewKeyDlg();
             if(newKeyDlg.ShowDialog() == true)
             {
-                
+                var context = RegTree.SelectedItem as RegTreeViewItem;
+                IntPtr newKey;
+                var name = newKeyDlg.InputName.Text;
+                regNewKey(context.hKey, new KeyName { Name = name }, out newKey);
+                var newItem = new RegTreeViewItem(RegTreeViewItemType.FOLDER, newKey) { Parent = context, Title = name, hKeyOpened = true };
+                context.Items.Add(newItem);
             }
         }
+        private void RegTreeItemCtxMenu_Delete_Click(object sender, RoutedEventArgs e)
+        {
+            var context = RegTree.SelectedItem as RegTreeViewItem;
+            switch(MessageBox.Show(string.Format("Delete HKEY: {0}?", context.Title), "Confirmation", MessageBoxButton.YesNo))
+            {
+                case MessageBoxResult.Yes:
+                    {
+                        regDelKey(context.Parent.hKey, new KeyName() { Name = context.Title });
+                        context.Parent.Items.Remove(context);
+                        break;
+                    }
+            }
+        }
+
     }
 
     public class RelayCommand : ICommand

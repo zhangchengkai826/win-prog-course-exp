@@ -84,11 +84,21 @@ void __stdcall regQuery(HKEY hKey, KeyName **subKeyNames, int *pcSubKeys, RegVal
 }
 
 void __stdcall regOpen(HKEY parentKey, KeyName name, HKEY* output) {
-	if (RegOpenKeyEx(parentKey, name.achKey, 0, KEY_READ, output) != ERROR_SUCCESS) {
+	if (RegOpenKeyEx(parentKey, name.achKey, 0, KEY_ALL_ACCESS, output) != ERROR_SUCCESS) {
 		*output = 0;
 	}
 }
 
 void __stdcall regNewKey(HKEY parentKey, KeyName name, HKEY *newKey) {
-	RegCreateKey(parentKey, name.achKey, newKey);
+	auto retCode = RegCreateKey(parentKey, name.achKey, newKey);
+	if (retCode != ERROR_SUCCESS) {
+		*newKey = 0;
+	}
+}
+
+void __stdcall regDelKey(HKEY parentKey, KeyName name) {
+	auto retCode = RegDeleteKey(parentKey, name.achKey);
+	if (retCode != ERROR_SUCCESS) {
+		// log err
+	}
 }

@@ -44,7 +44,7 @@
                                                         <Separator />
                                                         <MenuItem Header="String Value" />
                                                     </MenuItem>
-                                                    <MenuItem Header="Delete" />
+                                                    <MenuItem Header="Delete" Click="RegTreeItemCtxMenu_Delete_Click" />
                                                     <MenuItem Header="Rename" />
                                                 </ContextMenu>
                                             </StackPanel.ContextMenu>
