@@ -110,3 +110,10 @@ void __stdcall regSetKeyStringValue(HKEY hKey, KeyName name, KeyName data) {
 		// log err
 	}
 }
+
+void __stdcall regDelValue(HKEY hKey, KeyName name) {
+	auto retCode = RegDeleteValue(hKey, name.achKey);
+	if (retCode != ERROR_SUCCESS) {
+		// log err
+	}
+}

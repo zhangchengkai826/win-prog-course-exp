@@ -45,6 +45,8 @@ namespace win_prog_course_exp
         public static extern void regDelKey(IntPtr parentKey, KeyName name);
         [DllImport("regzck.dll", EntryPoint = "regSetKeyStringValue", CallingConvention = CallingConvention.StdCall)]
         public static extern void regSetKeyStringValue(IntPtr hKey, KeyName name, KeyName data);
+        [DllImport("regzck.dll", EntryPoint = "regDelValue", CallingConvention = CallingConvention.StdCall)]
+        public static extern void regDelValue(IntPtr hKey, KeyName name);
 
         private void RegTree_Expanded(object sender, RoutedEventArgs e)
         {
@@ -138,13 +140,14 @@ namespace win_prog_course_exp
         }
         private void RegValTable_Delete_Click(object sender, RoutedEventArgs e)
         {
-            var context = RegValTable.SelectedItem as RegValueItem;
-            switch (MessageBox.Show(string.Format("Delete Value: {0}?", context.Name), "Confirmation", MessageBoxButton.YesNo))
+            var contextKey = RegTree.SelectedItem as RegTreeViewItem;
+            var contextVal = RegValTable.SelectedItem as RegValueItem;
+            switch (MessageBox.Show(string.Format("Delete value '{0}' from key '{1}?", contextVal.Name, contextKey.Title), "Confirmation", MessageBoxButton.YesNo))
             {
                 case MessageBoxResult.Yes:
                     {
-                        regDelKey(context.Parent.hKey, new KeyName() { Name = context.Title });
-                        context.Parent.Items.Remove(context);
+                        regDelValue(contextKey.hKey, new KeyName() { Name = contextVal.Name });
+                        contextKey.Values.Remove(contextVal);
                         break;
                     }
             }
