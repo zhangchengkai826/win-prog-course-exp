@@ -16,6 +16,7 @@ using System.Windows.Interop;
 using System.Runtime.InteropServices;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.IO;
 
 namespace win_prog_course_exp
 {
@@ -37,6 +38,8 @@ namespace win_prog_course_exp
             RegTree.Items.Add(root);
 
             RegValTable.ItemsSource = RegValueItem.Empty;
+
+            FileTree.Items.Add(new FileTreeViewItem(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile)));
         }
 
         [DllImport("regzck.dll", EntryPoint = "regNewKey", CallingConvention = CallingConvention.StdCall)]
@@ -69,7 +72,6 @@ namespace win_prog_course_exp
                 }
             }
         }
-
         private void RegTree_Collapsed(object sender, RoutedEventArgs e)
         {
             var tvi = e.OriginalSource as TreeViewItem;
@@ -85,7 +87,6 @@ namespace win_prog_course_exp
                 }
             }
         }
-
         private void RegTree_Selected(object sender, RoutedEventArgs e)
         {
             var tvi = e.OriginalSource as TreeViewItem;
@@ -152,33 +153,37 @@ namespace win_prog_course_exp
                     }
             }
         }
-    }
 
-    public class RelayCommand : ICommand
-    {
-        private Action<object> execute;
-        private Func<object, bool> canExecute;
-
-        public event EventHandler CanExecuteChanged
+        private void FileTree_Expanded(object sender, RoutedEventArgs e)
         {
-            add { CommandManager.RequerySuggested += value; }
-            remove { CommandManager.RequerySuggested -= value; }
+            var tvi = e.OriginalSource as TreeViewItem;
+            if (tvi != null)
+            {
+                var context = tvi.DataContext as FileTreeViewItem;
+                if (context != null)
+                {
+                    if (context.Type == FileTreeViewItemType.FOLDER)
+                    {
+                        context.Type = FileTreeViewItemType.FOLDER_OPEN;
+                        context.queryFile();
+                    }
+                }
+            }
         }
-
-        public RelayCommand(Action<object> execute, Func<object, bool> canExecute = null)
+        private void FileTree_Collapsed(object sender, RoutedEventArgs e)
         {
-            this.execute = execute;
-            this.canExecute = canExecute;
-        }
-
-        public bool CanExecute(object parameter)
-        {
-            return canExecute == null || canExecute(parameter);
-        }
-
-        public void Execute(object parameter)
-        {
-            execute(parameter);
+            var tvi = e.OriginalSource as TreeViewItem;
+            if (tvi != null)
+            {
+                var context = tvi.DataContext as FileTreeViewItem;
+                if (context != null)
+                {
+                    if (context.Type == FileTreeViewItemType.FOLDER_OPEN)
+                    {
+                        context.Type = FileTreeViewItemType.FOLDER;
+                    }
+                }
+            }
         }
     }
 
@@ -358,6 +363,71 @@ namespace win_prog_course_exp
 
                 hKeyQueried = true;
             }
+        }
+    }
+
+    public enum FileTreeViewItemType { FILE, FOLDER, FOLDER_OPEN, }
+
+    public class FileTreeViewItem : INotifyPropertyChanged
+    {
+        public FileTreeViewItem(string Path)
+        {
+            Items = new ObservableCollection<FileTreeViewItem>();
+            this.Path = Path;
+            var fileInfo = new FileInfo(Path);
+            Title = fileInfo.Name;
+            if(fileInfo.Attributes.HasFlag(FileAttributes.Directory))
+            {
+                Type = FileTreeViewItemType.FOLDER;
+            } else
+            {
+                Type = FileTreeViewItemType.FILE;
+            }
+            FileQueried = false;
+        }
+        public ObservableCollection<FileTreeViewItem> Items { get; set; }
+        public string Title { get; set; }
+        private FileTreeViewItemType type;
+        public FileTreeViewItemType Type
+        {
+            get { return type; }
+            set
+            {
+                type = value;
+                OnPropertyChanged("Type");
+            }
+        }
+        public event PropertyChangedEventHandler PropertyChanged;
+        public void OnPropertyChanged(string propertyName)
+        {
+            if (PropertyChanged == null)
+            {
+                return;
+            }
+            PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+        }
+        public string Path { get; set; }
+        public bool FileQueried { get; set; }
+        public void queryFile()
+        {
+            if (Type == FileTreeViewItemType.FILE || FileQueried)
+            {
+                return;
+            }
+
+            Items.Clear();
+            var subDirs = Directory.EnumerateDirectories(Path);
+            foreach(var d in subDirs)
+            {
+                Items.Add(new FileTreeViewItem(d));
+            }
+            var files = Directory.EnumerateFiles(Path);
+            foreach(var f in files)
+            {
+                Items.Add(new FileTreeViewItem(f));
+            }
+
+            FileQueried = true;
         }
     }
 }

@@ -81,6 +81,54 @@
                         </Grid>
                     </Grid>
                 </TabItem>
+                <TabItem Header="文件操作">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+                        <Grid Grid.Row="0" Grid.Column="0">
+                            <TreeView TreeViewItem.Expanded="FileTree_Expanded" TreeViewItem.Collapsed="FileTree_Collapsed" Name="FileTree" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="5,5,5,5">
+                                <TreeView.ItemTemplate>
+                                    <HierarchicalDataTemplate DataType="x:Type local:FileTreeViewItem" ItemsSource="{Binding Items}">
+                                        <StackPanel Orientation="Horizontal">
+                                            <StackPanel.ContextMenu>
+                                                <ContextMenu>
+                                                    <MenuItem Header="New">
+                                                        <MenuItem Header="Folder" />
+                                                        <Separator />
+                                                        <MenuItem Header="File" />
+                                                    </MenuItem>
+                                                    <MenuItem Header="Delete" />
+                                                </ContextMenu>
+                                            </StackPanel.ContextMenu>
+                                            <Image Width="22" Height="22" Margin="0,0,5,-5">
+                                                <Image.Style>
+                                                    <Style TargetType="Image">
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding Type}" Value="{x:Static local:FileTreeViewItemType.FILE}">
+                                                                <Setter Property="Source" Value="Resources/icon/chapter.png" />
+                                                            </DataTrigger>
+                                                            <DataTrigger Binding="{Binding Type}" Value="{x:Static local:FileTreeViewItemType.FOLDER}">
+                                                                <Setter Property="Source" Value="Resources/icon/folder.png" />
+                                                            </DataTrigger>
+                                                            <DataTrigger Binding="{Binding Type}" Value="{x:Static local:FileTreeViewItemType.FOLDER_OPEN}">
+                                                                <Setter Property="Source" Value="Resources/icon/folder-open.png" />
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </Image.Style>
+                                            </Image>
+                                            <TextBlock FontSize="22" Text="{Binding Title}" />
+                                        </StackPanel>
+                                    </HierarchicalDataTemplate>
+                                </TreeView.ItemTemplate>
+                            </TreeView>
+                        </Grid>
+                    </Grid>
+                </TabItem>
             </TabControl>
         </Grid>
     </Grid>
