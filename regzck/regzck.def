@@ -4,3 +4,4 @@ EXPORTS
 	regOpen
 	regNewKey
 	regDelKey
+	regSetKeyStringValue

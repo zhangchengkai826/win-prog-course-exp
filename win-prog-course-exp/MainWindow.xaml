@@ -42,10 +42,9 @@
                                                     <MenuItem Header="New">
                                                         <MenuItem Header="Key" Click="RegTreeItemCtxMenu_New_Key_Click" />
                                                         <Separator />
-                                                        <MenuItem Header="String Value" />
+                                                        <MenuItem Header="String Value" Click="RegTreeItemCtxMenu_New_StringValue_Click" />
                                                     </MenuItem>
                                                     <MenuItem Header="Delete" Click="RegTreeItemCtxMenu_Delete_Click" />
-                                                    <MenuItem Header="Rename" />
                                                 </ContextMenu>
                                             </StackPanel.ContextMenu>
                                             <Image Width="22" Height="22" Margin="0,0,5,-5">

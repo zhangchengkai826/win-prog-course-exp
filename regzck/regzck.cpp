@@ -102,3 +102,11 @@ void __stdcall regDelKey(HKEY parentKey, KeyName name) {
 		// log err
 	}
 }
+
+void __stdcall regSetKeyStringValue(HKEY hKey, KeyName name, KeyName data) {
+	auto cbData = (lstrlen(data.achKey) + 1) * (int)sizeof(TCHAR);
+	auto retCode = RegSetKeyValue(hKey, NULL, name.achKey, REG_SZ, data.achKey, cbData);
+	if (retCode != ERROR_SUCCESS) {
+		// log err
+	}
+}

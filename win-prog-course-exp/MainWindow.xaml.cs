@@ -39,12 +39,12 @@ namespace win_prog_course_exp
             RegValTable.ItemsSource = RegValueItem.Empty;
         }
 
-        [DllImport("regzck.dll", EntryPoint = "regQuery", CallingConvention = CallingConvention.StdCall)]
-        public static extern void regQuery(IntPtr hKey, out IntPtr subKeyNames, out int pcSubKeys, out IntPtr regValues, out int pcValues);
         [DllImport("regzck.dll", EntryPoint = "regNewKey", CallingConvention = CallingConvention.StdCall)]
         public static extern void regNewKey(IntPtr parentKey, KeyName name, out IntPtr newKey);
         [DllImport("regzck.dll", EntryPoint = "regDelKey", CallingConvention = CallingConvention.StdCall)]
         public static extern void regDelKey(IntPtr parentKey, KeyName name);
+        [DllImport("regzck.dll", EntryPoint = "regSetKeyStringValue", CallingConvention = CallingConvention.StdCall)]
+        public static extern void regSetKeyStringValue(IntPtr hKey, KeyName name, KeyName data);
 
         private void RegTree_Expanded(object sender, RoutedEventArgs e)
         {
@@ -62,38 +62,7 @@ namespace win_prog_course_exp
                             return;
                         }
 
-                        if(!context.hKeyQueried)
-                        {
-                            IntPtr subKeyNamesUnmanaged;
-                            int cSubKeys;
-                            IntPtr regValuesUnmanaged;
-                            int cValues;
-                            regQuery(context.hKey, out subKeyNamesUnmanaged, out cSubKeys, out regValuesUnmanaged, out cValues);
-
-                            var subKeyNames = new KeyName[cSubKeys];
-                            var keyNameStride = Marshal.SizeOf(typeof(KeyName));
-                            for (int i = 0; i < cSubKeys; i++)
-                            {
-                                var p = new IntPtr(subKeyNamesUnmanaged.ToInt64() + i * keyNameStride);
-                                subKeyNames[i] = (KeyName)Marshal.PtrToStructure(p, typeof(KeyName));
-                            }
-
-                            for (int i = 0; i < cSubKeys; i++)
-                            {
-                                context.Items.Add(new RegTreeViewItem(RegTreeViewItemType.FOLDER) { Title = subKeyNames[i].Name, Parent = context });
-                            }
-
-                            var regValueStride = Marshal.SizeOf(typeof(RegValue));
-                            for (int i = 0; i < cValues; i++)
-                            {
-                                var p = new IntPtr(regValuesUnmanaged.ToInt64() + i * regValueStride);
-                                var regValue = (RegValue)Marshal.PtrToStructure(p, typeof(RegValue));
-                                context.OriginalValues.Add(regValue);
-                                context.Values.Add(new RegValueItem(regValue));
-                            }
-
-                            context.hKeyQueried = true;
-                        }
+                        context.queryKey();
                     }
                 }
             }
@@ -154,7 +123,19 @@ namespace win_prog_course_exp
                     }
             }
         }
-
+        private void RegTreeItemCtxMenu_New_StringValue_Click(object sender, RoutedEventArgs e)
+        {
+            var dlg = new NewStringValueDlg();
+            if (dlg.ShowDialog() == true)
+            {
+                var context = RegTree.SelectedItem as RegTreeViewItem;
+                var name = dlg.InputName.Text;
+                var data = dlg.InputData.Text;
+                regSetKeyStringValue(context.hKey, new KeyName() { Name = name }, new KeyName() { Name = data });
+                context.hKeyQueried = false;
+                context.queryKey();
+            }
+        }
     }
 
     public class RelayCommand : ICommand
@@ -298,6 +279,8 @@ namespace win_prog_course_exp
 
         [DllImport("regzck.dll", EntryPoint = "regOpen", CallingConvention = CallingConvention.StdCall)]
         public static extern void regOpen(IntPtr parentKey, KeyName name, out IntPtr output);
+        [DllImport("regzck.dll", EntryPoint = "regQuery", CallingConvention = CallingConvention.StdCall)]
+        public static extern void regQuery(IntPtr hKey, out IntPtr subKeyNames, out int pcSubKeys, out IntPtr regValues, out int pcValues);
         public bool openKey()
         {
             if(hKeyOpened)
@@ -320,6 +303,45 @@ namespace win_prog_course_exp
             }
 
             return true;
+        }
+
+        public void queryKey()
+        {
+            if (!hKeyQueried)
+            {
+                IntPtr subKeyNamesUnmanaged;
+                int cSubKeys;
+                IntPtr regValuesUnmanaged;
+                int cValues;
+                regQuery(hKey, out subKeyNamesUnmanaged, out cSubKeys, out regValuesUnmanaged, out cValues);
+
+                var subKeyNames = new KeyName[cSubKeys];
+                var keyNameStride = Marshal.SizeOf(typeof(KeyName));
+                for (int i = 0; i < cSubKeys; i++)
+                {
+                    var p = new IntPtr(subKeyNamesUnmanaged.ToInt64() + i * keyNameStride);
+                    subKeyNames[i] = (KeyName)Marshal.PtrToStructure(p, typeof(KeyName));
+                }
+
+                Items.Clear();
+                for (int i = 0; i < cSubKeys; i++)
+                {
+                    Items.Add(new RegTreeViewItem(RegTreeViewItemType.FOLDER) { Title = subKeyNames[i].Name, Parent = this });
+                }
+
+                OriginalValues.Clear();
+                Values.Clear();
+                var regValueStride = Marshal.SizeOf(typeof(RegValue));
+                for (int i = 0; i < cValues; i++)
+                {
+                    var p = new IntPtr(regValuesUnmanaged.ToInt64() + i * regValueStride);
+                    var regValue = (RegValue)Marshal.PtrToStructure(p, typeof(RegValue));
+                    OriginalValues.Add(regValue);
+                    Values.Add(new RegValueItem(regValue));
+                }
+
+                hKeyQueried = true;
+            }
         }
     }
 }
