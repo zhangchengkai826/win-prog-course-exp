@@ -136,6 +136,19 @@ namespace win_prog_course_exp
                 context.queryKey();
             }
         }
+        private void RegValTable_Delete_Click(object sender, RoutedEventArgs e)
+        {
+            var context = RegValTable.SelectedItem as RegValueItem;
+            switch (MessageBox.Show(string.Format("Delete Value: {0}?", context.Name), "Confirmation", MessageBoxButton.YesNo))
+            {
+                case MessageBoxResult.Yes:
+                    {
+                        regDelKey(context.Parent.hKey, new KeyName() { Name = context.Title });
+                        context.Parent.Items.Remove(context);
+                        break;
+                    }
+            }
+        }
     }
 
     public class RelayCommand : ICommand

@@ -71,7 +71,13 @@
                             </TreeView>
                         </Grid>
                         <Grid Grid.Row="0" Grid.Column="1">
-                            <DataGrid Name="RegValTable" IsReadOnly="True" CanUserAddRows="False" CanUserDeleteRows="False" CanUserReorderColumns="False" CanUserResizeRows="False" />
+                            <DataGrid Name="RegValTable" IsReadOnly="True" CanUserAddRows="False" CanUserDeleteRows="False" CanUserReorderColumns="False" CanUserResizeRows="False">
+                                <DataGrid.ContextMenu>
+                                    <ContextMenu>
+                                        <MenuItem Header="Delete" Click="RegValTable_Delete_Click" />
+                                    </ContextMenu>
+                                </DataGrid.ContextMenu>
+                            </DataGrid>
                         </Grid>
                     </Grid>
                 </TabItem>
