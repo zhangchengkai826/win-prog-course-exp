@@ -38,24 +38,14 @@
                                     <HierarchicalDataTemplate DataType="x:Type local:RegTreeViewItem" ItemsSource="{Binding Items}">
                                         <StackPanel Orientation="Horizontal">
                                             <StackPanel.ContextMenu>
-                                                <ContextMenu Name="RegTreeItemCtxMenu">
-                                                    <ContextMenu.ItemsPanel>
-                                                        <ItemsPanelTemplate>
-                                                            <StackPanel Margin="-20,0,0,0" Background="White" />
-                                                        </ItemsPanelTemplate>
-                                                    </ContextMenu.ItemsPanel>
+                                                <ContextMenu>
                                                     <MenuItem Header="New">
-                                                        <MenuItem.ItemsPanel>
-                                                            <ItemsPanelTemplate>
-                                                                <StackPanel Margin="-20,0,0,0" Background="White" />
-                                                            </ItemsPanelTemplate>
-                                                        </MenuItem.ItemsPanel>
-                                                        <MenuItem Header="Key" Name="RegTreeItemCtxMenu_New_Key" Click="RegTreeItemCtxMenu_Click" />
+                                                        <MenuItem Header="Key" Click="RegTreeItemCtxMenu_New_Key_Click" />
                                                         <Separator />
-                                                        <MenuItem Header="String Value" Name="RegTreeItemCtxMenu_New_Str" Click="RegTreeItemCtxMenu_Click" />
+                                                        <MenuItem Header="String Value" />
                                                     </MenuItem>
-                                                    <MenuItem Header="Delete" Name="RegTreeItemCtxMenu_Del" Click="RegTreeItemCtxMenu_Click" />
-                                                    <MenuItem Header="Rename" Name="RegTreeItemCtxMenu_Rename" Click="RegTreeItemCtxMenu_Click" />
+                                                    <MenuItem Header="Delete" />
+                                                    <MenuItem Header="Rename" />
                                                 </ContextMenu>
                                             </StackPanel.ContextMenu>
                                             <Image Width="22" Height="22" Margin="0,0,5,-5">
