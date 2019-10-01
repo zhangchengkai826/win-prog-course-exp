@@ -151,5 +151,11 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\filezckmanaged\filezckmanaged.csproj">
+      <Project>{d3f21ba1-33a2-4e6a-8982-880dd8815870}</Project>
+      <Name>filezckmanaged</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

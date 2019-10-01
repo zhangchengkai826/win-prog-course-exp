@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:win_prog_course_exp"
+        xmlns:filezck="clr-namespace:filezckmanaged;assembly=filezckmanaged"
         mc:Ignorable="d"
         Title="Windows Programming Course Experiments -- Chengkai Zhang" Height="450" Width="800" MinHeight="400" MinWidth="750">
     <Grid>
@@ -92,7 +93,7 @@
                         <Grid Grid.Row="0" Grid.Column="0">
                             <TreeView TreeViewItem.Expanded="FileTree_Expanded" TreeViewItem.Collapsed="FileTree_Collapsed" Name="FileTree" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="5,5,5,5">
                                 <TreeView.ItemTemplate>
-                                    <HierarchicalDataTemplate DataType="x:Type local:FileTreeViewItem" ItemsSource="{Binding Items}">
+                                    <HierarchicalDataTemplate DataType="x:Type filezck:FileTreeViewItem" ItemsSource="{Binding Items}">
                                         <StackPanel Orientation="Horizontal">
                                             <StackPanel.ContextMenu>
                                                 <ContextMenu>
@@ -108,13 +109,13 @@
                                                 <Image.Style>
                                                     <Style TargetType="Image">
                                                         <Style.Triggers>
-                                                            <DataTrigger Binding="{Binding Type}" Value="{x:Static local:FileTreeViewItemType.FILE}">
+                                                            <DataTrigger Binding="{Binding Type}" Value="{x:Static filezck:FileTreeViewItemType.FILE}">
                                                                 <Setter Property="Source" Value="Resources/icon/chapter.png" />
                                                             </DataTrigger>
-                                                            <DataTrigger Binding="{Binding Type}" Value="{x:Static local:FileTreeViewItemType.FOLDER}">
+                                                            <DataTrigger Binding="{Binding Type}" Value="{x:Static filezck:FileTreeViewItemType.FOLDER}">
                                                                 <Setter Property="Source" Value="Resources/icon/folder.png" />
                                                             </DataTrigger>
-                                                            <DataTrigger Binding="{Binding Type}" Value="{x:Static local:FileTreeViewItemType.FOLDER_OPEN}">
+                                                            <DataTrigger Binding="{Binding Type}" Value="{x:Static filezck:FileTreeViewItemType.FOLDER_OPEN}">
                                                                 <Setter Property="Source" Value="Resources/icon/folder-open.png" />
                                                             </DataTrigger>
                                                         </Style.Triggers>
