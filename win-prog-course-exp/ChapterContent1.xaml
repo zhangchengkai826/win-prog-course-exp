@@ -1,0 +1,118 @@
+﻿<UserControl x:Class="win_prog_course_exp.ChapterContent1"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:win_prog_course_exp"
+             xmlns:filezck="clr-namespace:filezckmanaged;assembly=filezckmanaged"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <TabControl HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+        <TabItem Header="注册表操作">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="2*" />
+                    <ColumnDefinition Width="2*" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <Grid Grid.Row="0" Grid.Column="0">
+                    <TreeView Name="RegTree" TreeViewItem.Selected="RegTree_Selected" TreeViewItem.Expanded="RegTree_Expanded" TreeViewItem.Collapsed="RegTree_Collapsed" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="5,5,5,5">
+                        <TreeView.ItemTemplate>
+                            <HierarchicalDataTemplate DataType="x:Type local:RegTreeViewItem" ItemsSource="{Binding Items}">
+                                <StackPanel Orientation="Horizontal">
+                                    <StackPanel.ContextMenu>
+                                        <ContextMenu>
+                                            <MenuItem Header="New">
+                                                <MenuItem Header="Key" Click="RegTreeItemCtxMenu_New_Key_Click" />
+                                                <Separator />
+                                                <MenuItem Header="String Value" Click="RegTreeItemCtxMenu_New_StringValue_Click" />
+                                            </MenuItem>
+                                            <MenuItem Header="Delete" Click="RegTreeItemCtxMenu_Delete_Click" />
+                                        </ContextMenu>
+                                    </StackPanel.ContextMenu>
+                                    <Image Width="22" Height="22" Margin="0,0,5,-5">
+                                        <Image.Style>
+                                            <Style TargetType="Image">
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding Type}" Value="{x:Static local:RegTreeViewItemType.COMPUTER}">
+                                                        <Setter Property="Source" Value="Resources/icon/laptop.png" />
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding Type}" Value="{x:Static local:RegTreeViewItemType.FOLDER}">
+                                                        <Setter Property="Source" Value="Resources/icon/folder.png" />
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding Type}" Value="{x:Static local:RegTreeViewItemType.FOLDER_OPEN}">
+                                                        <Setter Property="Source" Value="Resources/icon/folder-open.png" />
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Image.Style>
+                                    </Image>
+                                    <TextBlock FontSize="22" Text="{Binding Title}" />
+                                </StackPanel>
+                            </HierarchicalDataTemplate>
+                        </TreeView.ItemTemplate>
+                    </TreeView>
+                </Grid>
+                <Grid Grid.Row="0" Grid.Column="1">
+                    <DataGrid Name="RegValTable" IsReadOnly="True" CanUserAddRows="False" CanUserDeleteRows="False" CanUserReorderColumns="False" CanUserResizeRows="False">
+                        <DataGrid.ContextMenu>
+                            <ContextMenu>
+                                <MenuItem Header="Delete" Click="RegValTable_Delete_Click" />
+                            </ContextMenu>
+                        </DataGrid.ContextMenu>
+                    </DataGrid>
+                </Grid>
+            </Grid>
+        </TabItem>
+        <TabItem Header="文件操作">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <Grid Grid.Row="0" Grid.Column="0">
+                    <TreeView TreeViewItem.Expanded="FileTree_Expanded" TreeViewItem.Collapsed="FileTree_Collapsed" Name="FileTree" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="5,5,5,5">
+                        <TreeView.ItemTemplate>
+                            <HierarchicalDataTemplate DataType="x:Type filezck:FileTreeViewItem" ItemsSource="{Binding Items}">
+                                <StackPanel Orientation="Horizontal">
+                                    <StackPanel.ContextMenu>
+                                        <ContextMenu>
+                                            <MenuItem Header="New">
+                                                <MenuItem Header="Folder" Click="FileTreeItemCtxMenu_New_Folder_Click" />
+                                                <Separator />
+                                                <MenuItem Header="File" Click="FileTreeItemCtxMenu_New_File_Click" />
+                                            </MenuItem>
+                                            <MenuItem Header="Delete" Click="FileTreeItemCtxMenu_Delete_Click" />
+                                        </ContextMenu>
+                                    </StackPanel.ContextMenu>
+                                    <Image Width="22" Height="22" Margin="0,0,5,-5">
+                                        <Image.Style>
+                                            <Style TargetType="Image">
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding Type}" Value="{x:Static filezck:FileTreeViewItemType.FILE}">
+                                                        <Setter Property="Source" Value="Resources/icon/chapter.png" />
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding Type}" Value="{x:Static filezck:FileTreeViewItemType.FOLDER}">
+                                                        <Setter Property="Source" Value="Resources/icon/folder.png" />
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding Type}" Value="{x:Static filezck:FileTreeViewItemType.FOLDER_OPEN}">
+                                                        <Setter Property="Source" Value="Resources/icon/folder-open.png" />
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Image.Style>
+                                    </Image>
+                                    <TextBlock FontSize="22" Text="{Binding Title}" />
+                                </StackPanel>
+                            </HierarchicalDataTemplate>
+                        </TreeView.ItemTemplate>
+                    </TreeView>
+                </Grid>
+            </Grid>
+        </TabItem>
+    </TabControl>
+</UserControl>
