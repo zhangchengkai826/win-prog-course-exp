@@ -185,6 +185,87 @@ namespace win_prog_course_exp
                 }
             }
         }
+        [DllImport("Kernel32.dll")]
+        public static extern int CreateDirectory(string lpPathName, IntPtr lpSecurityAttributes);
+        [DllImport("Kernel32.dll")]
+        public static extern IntPtr CreateFile(string lpFileName, int dwDesiredAccess, int dwShareMode, IntPtr lpSecurityAttributes, int dwCreationDisposition, int dwFlagsAndAttributes, IntPtr hTemplateFile);
+        [DllImport("Kernel32.dll")]
+        public static extern int CloseHandle(IntPtr hObject);
+        [DllImport("Kernel32.dll")]
+        public static extern int DeleteFile(string lpFileName);
+        [DllImport("Kernel32.dll")]
+        public static extern int RemoveDirectory(string lpPathName);
+        private void FileTreeItemCtxMenu_New_Folder_Click(object sender, RoutedEventArgs e)
+        {
+            var dlg = new NewKeyDlg() { PromptText = "Please enter the folder name:" };
+            if (dlg.ShowDialog() == true)
+            {
+                var context = FileTree.SelectedItem as FileTreeViewItem;
+                if(context.Type == FileTreeViewItemType.FILE)
+                {
+                    context = context.Parent;
+                }
+                var path = System.IO.Path.Combine(context.Path, dlg.InputName.Text);
+                CreateDirectory(path, (IntPtr)0);
+                var newItem = new FileTreeViewItem(path) { Parent = context };
+                int index = 0;
+                for(;index < context.Items.Count; index++)
+                {
+                    if(context.Items[index].Type == FileTreeViewItemType.FILE)
+                    {
+                        break;
+                    }
+                }
+                context.Items.Insert(index, newItem);
+            }
+        }
+        private void FileTreeItemCtxMenu_New_File_Click(object sender, RoutedEventArgs e)
+        {
+            var dlg = new NewKeyDlg() { PromptText = "Please enter the file name:" };
+            if (dlg.ShowDialog() == true)
+            {
+                var context = FileTree.SelectedItem as FileTreeViewItem;
+                if (context.Type == FileTreeViewItemType.FILE)
+                {
+                    context = context.Parent;
+                }
+                var path = System.IO.Path.Combine(context.Path, dlg.InputName.Text);
+                if(File.Exists(path))
+                {
+                    MessageBox.Show("File already exists.");
+                    return;
+                }
+                var hFile = CreateFile(path, 0, 0, (IntPtr)0, 1, 0x80, (IntPtr)0);
+                CloseHandle(hFile);
+                var newItem = new FileTreeViewItem(path) { Parent = context };
+                context.Items.Add(newItem);
+            }
+        }
+        private void FileTreeItemCtxMenu_Delete_Click(object sender, RoutedEventArgs e)
+        {
+            var context = FileTree.SelectedItem as FileTreeViewItem;
+            if(context.Type != FileTreeViewItemType.FILE && context.Items.Count > 0)
+            {
+                MessageBox.Show("Cannot delete a non-empty folder.");
+                return;
+            }
+            switch (MessageBox.Show(string.Format("Delete {0}?", context.Title), "Confirmation", MessageBoxButton.YesNo))
+            {
+                case MessageBoxResult.Yes:
+                    {
+                        if(context.Type == FileTreeViewItemType.FILE)
+                        {
+                            DeleteFile(context.Path);
+                        }
+                        else
+                        {
+                            RemoveDirectory(context.Path);
+                        }
+                        context.Parent.Items.Remove(context);
+                        break;
+                    }
+            }
+        }
     }
 
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Auto)]
@@ -408,6 +489,7 @@ namespace win_prog_course_exp
         }
         public string Path { get; set; }
         public bool FileQueried { get; set; }
+        public FileTreeViewItem Parent { get; set; }
         public void queryFile()
         {
             if (Type == FileTreeViewItemType.FILE || FileQueried)
@@ -419,12 +501,12 @@ namespace win_prog_course_exp
             var subDirs = Directory.EnumerateDirectories(Path);
             foreach(var d in subDirs)
             {
-                Items.Add(new FileTreeViewItem(d));
+                Items.Add(new FileTreeViewItem(d) { Parent = this });
             }
             var files = Directory.EnumerateFiles(Path);
             foreach(var f in files)
             {
-                Items.Add(new FileTreeViewItem(f));
+                Items.Add(new FileTreeViewItem(f) { Parent = this });
             }
 
             FileQueried = true;

@@ -27,5 +27,16 @@ namespace win_prog_course_exp
         {
             DialogResult = true;
         }
+        public string PromptText
+        {
+            get
+            {
+                return Prompt.Text;
+            }
+            set
+            {
+                Prompt.Text = value;
+            }
+        }
     }
 }
