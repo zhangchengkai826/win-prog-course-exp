@@ -22,7 +22,23 @@
             <local:ChapterSideSelector />
         </Grid>
         <Grid Grid.Row="0" Grid.Column="1" Grid.RowSpan="2">
-            <local:ChapterContent1 />
+            <ContentControl>
+                <ContentControl.Style>
+                    <Style TargetType="{x:Type ContentControl}">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding Source={x:Static local:ChapterSideSelector+ChapterSideSelectorItem.CurOnId}}" Value="0">
+                                <Setter Property="ContentTemplate">
+                                    <Setter.Value>
+                                        <DataTemplate>
+                                            <local:ChapterContent1 />
+                                        </DataTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </ContentControl.Style>
+            </ContentControl>
         </Grid>
     </Grid>
 </Window>
