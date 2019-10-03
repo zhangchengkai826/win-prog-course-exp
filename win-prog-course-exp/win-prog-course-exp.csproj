@@ -64,11 +64,18 @@
     <Compile Include="ChapterContent1.xaml.cs">
       <DependentUpon>ChapterContent1.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ChapterContent2.xaml.cs">
+      <DependentUpon>ChapterContent2.xaml</DependentUpon>
+    </Compile>
     <Compile Include="NewStringValueDlg.xaml.cs">
       <DependentUpon>NewStringValueDlg.xaml</DependentUpon>
     </Compile>
     <Compile Include="Util.cs" />
     <Page Include="ChapterContent1.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ChapterContent2.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -1,0 +1,81 @@
+﻿<UserControl x:Class="win_prog_course_exp.ChapterContent2"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:win_prog_course_exp"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <TabControl HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+        <TabItem Header="Word COM 操作">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="3*" />
+                    <RowDefinition Height="3*" />
+                    <RowDefinition Height="3*" />
+                </Grid.RowDefinitions>
+                <Grid Grid.Row="0" Grid.Column="0">
+                    <Button Background="AliceBlue">
+                        <TextBlock FontSize="14">
+                            Task 1: 使用Word COM组件将一个文件夹里的所有txt文件合成为一个Word文档，每一个txt文件对应Word文档里的一个小节
+                        </TextBlock>
+                    </Button>
+                </Grid>
+                <Grid Grid.Row="1" Grid.Column="0">
+                    <Button Background="Honeydew">
+                        <TextBlock FontSize="14">
+                            Task 2: 使用Word COM组件在一个Word文档中添加艺术字
+                        </TextBlock>
+                    </Button>
+                </Grid>
+                <Grid Grid.Row="2" Grid.Column="0">
+                    <Button Background="Ivory">
+                        <TextBlock FontSize="14">
+                            Task 3: 使用Word COM组件在一个Word文档每小节的页眉处添加不同的文本信息
+                        </TextBlock>
+                    </Button>
+                </Grid>
+            </Grid>
+        </TabItem>
+        <TabItem Header="Excel COM 操作">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="2*" />
+                    <ColumnDefinition Width="2*" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="3*" />
+                    <RowDefinition Height="3*" />
+                    <RowDefinition Height="3*" />
+                </Grid.RowDefinitions>
+                <Grid Grid.Row="0" Grid.Column="0">
+                    <Button Background="AliceBlue">
+                        <TextBlock FontSize="14">
+                            Task 1: 将一个Excel表格中的信息显示到右侧的DataGrid
+                        </TextBlock>
+                    </Button>
+                </Grid>
+                <Grid Grid.Row="1" Grid.Column="0">
+                    <Button Background="Honeydew">
+                        <TextBlock FontSize="14">
+                            Task 2: 将一个Excel表格的边框设置为黑实线
+                        </TextBlock>
+                    </Button>
+                </Grid>
+                <Grid Grid.Row="2" Grid.Column="0">
+                    <Button Background="Ivory">
+                        <TextBlock FontSize="14">
+                            Task 3: 向一个Excel文件中添加图表
+                        </TextBlock>
+                    </Button>
+                </Grid>
+                <Grid Grid.Row="0" Grid.Column="1" Grid.RowSpan="3">
+                    <DataGrid />
+                </Grid>
+            </Grid>
+        </TabItem>
+    </TabControl>
+</UserControl>
