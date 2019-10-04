@@ -1,9 +1,11 @@
-﻿using System;
+﻿using Microsoft.Win32;
+using System;
 using System.Runtime.InteropServices;
+using System.Windows;
 
 namespace comzck
 {
-    [Guid("388d279f-591c-416d-bfa7-24c61c4e041a")]
+    [Guid("C0993702-DB7B-4D50-A526-3E9887305196")]
     [ComVisible(true)]
     public interface ICOMZck
     {
@@ -12,14 +14,18 @@ namespace comzck
         void doTask3();
     }
 
-    [Guid("54e45d06-8372-4998-adac-703bcc97bab8")]
+    [Guid("9D9B759B-55E4-4FFC-B9DF-D7F2230B3439")]
     [ComVisible(true)]
     [ClassInterface(ClassInterfaceType.None)]
-    public class WordCOMZck : ICOMZck
+    internal class WordCOMZck : ICOMZck
     {
         public void doTask1()
         {
-
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            if (openFileDialog.ShowDialog() == true)
+            {
+                MessageBox.Show(openFileDialog.FileName);
+            }
         }
         public void doTask2()
         {
@@ -31,10 +37,10 @@ namespace comzck
         }
     }
 
-    [Guid("2be67539-154d-47c8-b040-49833d1535f1")]
+    [Guid("2FE12FD0-6AF0-4575-9EBB-D6A692FEFF9D")]
     [ComVisible(true)]
     [ClassInterface(ClassInterfaceType.None)]
-    public class ExcelCOMZck : ICOMZck
+    internal class ExcelCOMZck : ICOMZck
     {
         public void doTask1()
         {

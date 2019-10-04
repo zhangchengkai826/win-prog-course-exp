@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using comzck;
 
 namespace win_prog_course_exp
 {
@@ -23,6 +24,14 @@ namespace win_prog_course_exp
         public ChapterContent2()
         {
             InitializeComponent();
+        }
+
+        private void Btn_Word1_Click(object sender, RoutedEventArgs e)
+        {
+            var guid = new Guid("9D9B759B-55E4-4FFC-B9DF-D7F2230B3439");
+            var comType = Type.GetTypeFromCLSID(guid);
+            var com = Activator.CreateInstance(comType) as ICOMZck;
+            com.doTask1();
         }
     }
 }

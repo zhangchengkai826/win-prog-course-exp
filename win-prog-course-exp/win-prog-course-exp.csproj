@@ -166,6 +166,10 @@
     </Resource>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\comzck\comzck.csproj">
+      <Project>{d7b3caba-24c3-4e31-a79a-e64b594776d8}</Project>
+      <Name>comzck</Name>
+    </ProjectReference>
     <ProjectReference Include="..\filezckmanaged\filezckmanaged.csproj">
       <Project>{d3f21ba1-33a2-4e6a-8982-880dd8815870}</Project>
       <Name>filezckmanaged</Name>

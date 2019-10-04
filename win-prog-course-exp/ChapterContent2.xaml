@@ -18,7 +18,7 @@
                     <RowDefinition Height="3*" />
                 </Grid.RowDefinitions>
                 <Grid Grid.Row="0" Grid.Column="0">
-                    <Button Background="AliceBlue">
+                    <Button Background="AliceBlue" Click="Btn_Word1_Click">
                         <TextBlock FontSize="14">
                             Task 1: 使用Word COM组件将一个文件夹里的所有txt文件合成为一个Word文档，每一个txt文件对应Word文档里的一个小节
                         </TextBlock>
