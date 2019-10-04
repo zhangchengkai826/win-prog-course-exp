@@ -1,4 +1,5 @@
 ﻿using Microsoft.Win32;
+using Microsoft.WindowsAPICodePack.Dialogs;
 using System;
 using System.Runtime.InteropServices;
 using System.Windows;
@@ -21,8 +22,9 @@ namespace comzck
     {
         public void doTask1()
         {
-            OpenFileDialog openFileDialog = new OpenFileDialog();
-            if (openFileDialog.ShowDialog() == true)
+            var openFileDialog = new CommonOpenFileDialog();
+            openFileDialog.IsFolderPicker = true;
+            if (openFileDialog.ShowDialog() == CommonFileDialogResult.Ok)
             {
                 MessageBox.Show(openFileDialog.FileName);
             }
