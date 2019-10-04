@@ -3,6 +3,7 @@ using Microsoft.WindowsAPICodePack.Dialogs;
 using System;
 using System.Runtime.InteropServices;
 using System.Windows;
+using MsWord = Microsoft.Office.Interop.Word;
 
 namespace comzck
 {
@@ -26,7 +27,13 @@ namespace comzck
             openFileDialog.IsFolderPicker = true;
             if (openFileDialog.ShowDialog() == CommonFileDialogResult.Ok)
             {
-                MessageBox.Show(openFileDialog.FileName);
+                var missing = System.Reflection.Missing.Value;
+                var app = new MsWord.Application();
+                var doc = app.Documents.Add();
+                doc.Activate();
+                var fileName = openFileDialog.FileName + "\\paper.doc";
+                doc.SaveAs(fileName);
+                doc.Close();
             }
         }
         public void doTask2()
