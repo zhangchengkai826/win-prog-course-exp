@@ -1,5 +1,6 @@
 # Custom - Chengkai Zhang
 .vs
+*.snk
 
 # User-specific files
 *.suo
