@@ -30,7 +30,34 @@ namespace win_prog_course_exp
             ChapterSideSelectorItem.Items.Add(new ChapterSideSelectorItem() { Title = "实验二" });
             ChapterSideSelectorItem.Items.Add(new ChapterSideSelectorItem() { Title = "实验三" });
             chapterSideSelector.ItemsSource = ChapterSideSelectorItem.Items;
-            ChapterSideSelectorItem.CurOnId = 0;
+            ChapterSideSelectorController.Instance.CurOnId = 0;
+        }
+        public sealed class ChapterSideSelectorController : INotifyPropertyChanged
+        {
+            private ChapterSideSelectorController() { }
+            private static readonly Lazy<ChapterSideSelectorController> Lazy = new Lazy<ChapterSideSelectorController>(() => new ChapterSideSelectorController());
+            public static ChapterSideSelectorController Instance { get { return Lazy.Value; } }
+            private int curOnId;
+            public int CurOnId
+            {
+                get { return curOnId; }
+                set
+                {
+                    ChapterSideSelectorItem.Items[curOnId].IsOn = false;
+                    curOnId = value;
+                    ChapterSideSelectorItem.Items[curOnId].IsOn = true;
+                    OnPropertyChanged("CurOnId");
+                }
+            }
+            public event PropertyChangedEventHandler PropertyChanged;
+            public void OnPropertyChanged(string propertyName)
+            {
+                if (PropertyChanged == null)
+                {
+                    return;
+                }
+                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+            }
         }
         public class ChapterSideSelectorItem : INotifyPropertyChanged
         {
@@ -57,21 +84,11 @@ namespace win_prog_course_exp
             }
 
             public static ObservableCollection<ChapterSideSelectorItem> Items { get; set; }
-            private static int curOnId;
-            public static int CurOnId
-            {
-                get { return curOnId; }
-                set
-                {
-                    Items[CurOnId].IsOn = false;
-                    curOnId = value;
-                    Items[CurOnId].IsOn = true;
-                }
-            }
+           
             private void OnClick(object obj)
             {
                 var chapterBtn = (obj as Button).DataContext as ChapterSideSelectorItem;
-                CurOnId = Items.IndexOf(chapterBtn);
+                ChapterSideSelectorController.Instance.CurOnId = Items.IndexOf(chapterBtn);
             }
             public ICommand OnClickCmd { get; set; }
 

@@ -22,11 +22,11 @@
             <local:ChapterSideSelector />
         </Grid>
         <Grid Grid.Row="0" Grid.Column="1" Grid.RowSpan="2">
-            <ContentControl>
+            <ContentControl x:Name="PresentationArea">
                 <ContentControl.Style>
                     <Style TargetType="{x:Type ContentControl}">
                         <Style.Triggers>
-                            <DataTrigger Binding="{Binding Source={x:Static local:ChapterSideSelector+ChapterSideSelectorItem.CurOnId}}" Value="0">
+                            <DataTrigger Binding="{Binding CurOnId}" Value="0">
                                 <Setter Property="ContentTemplate">
                                     <Setter.Value>
                                         <DataTemplate>
@@ -35,7 +35,7 @@
                                     </Setter.Value>
                                 </Setter>
                             </DataTrigger>
-                            <DataTrigger Binding="{Binding Source={x:Static local:ChapterSideSelector+ChapterSideSelectorItem.CurOnId}}" Value="1">
+                            <DataTrigger Binding="{Binding CurOnId}" Value="1">
                                 <Setter Property="ContentTemplate">
                                     <Setter.Value>
                                         <DataTemplate>

@@ -29,6 +29,7 @@ namespace win_prog_course_exp
         public MainWindow()
         {
             InitializeComponent();
+            PresentationArea.DataContext = ChapterSideSelector.ChapterSideSelectorController.Instance;
         }
     }
 }
