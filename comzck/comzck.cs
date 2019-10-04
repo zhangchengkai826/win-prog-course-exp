@@ -5,6 +5,7 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Windows;
 using MsWord = Microsoft.Office.Interop.Word;
+using Microsoft.Office.Core;
 
 namespace comzck
 {
@@ -28,7 +29,6 @@ namespace comzck
             openFileDialog.IsFolderPicker = true;
             if (openFileDialog.ShowDialog() == CommonFileDialogResult.Ok)
             {
-                var missing = System.Reflection.Missing.Value;
                 var app = new MsWord.Application();
                 var doc = app.Documents.Add();
                 doc.Activate();
@@ -53,11 +53,65 @@ namespace comzck
         }
         public void doTask2()
         {
+            var openFileDialog = new CommonOpenFileDialog();
+            openFileDialog.Filters.Add(new CommonFileDialogFilter("Word Documents", "*.doc"));
+            if (openFileDialog.ShowDialog() == CommonFileDialogResult.Ok)
+            {
+                var app = new MsWord.Application();
+                var fileName = openFileDialog.FileName;
+                var doc = app.Documents.Open(fileName);
+                doc.Activate();
 
+                doc.Shapes.AddTextEffect(MsoPresetTextEffect.msoTextEffect1, "Some WordArt", "Comic Sans MS", 28, MsoTriState.msoTrue, MsoTriState.msoTrue, 50, 100);
+
+                doc.Save();
+                doc.Close();
+                app.Quit();
+                Marshal.ReleaseComObject(app);
+                MessageBox.Show("Finished!");
+            }
         }
         public void doTask3()
         {
+            var openFileDialog = new CommonOpenFileDialog();
+            openFileDialog.Filters.Add(new CommonFileDialogFilter("Word Documents", "*.doc"));
+            if (openFileDialog.ShowDialog() == CommonFileDialogResult.Ok)
+            {
+                var app = new MsWord.Application();
+                var fileName = openFileDialog.FileName;
+                var doc = app.Documents.Open(fileName);
+                doc.Activate();
 
+                foreach(MsWord.Section sec in doc.Sections)
+                {
+                    switch(sec.Index)
+                    {
+                        case 1:
+                            {
+                                sec.Headers[MsWord.WdHeaderFooterIndex.wdHeaderFooterPrimary].Range.Text = "Abstract";
+                                break;
+                            }
+                        case 2:
+                            {
+                                sec.Headers[MsWord.WdHeaderFooterIndex.wdHeaderFooterPrimary].LinkToPrevious = false;
+                                sec.Headers[MsWord.WdHeaderFooterIndex.wdHeaderFooterPrimary].Range.Text = "Body";
+                                break;
+                            }
+                        case 3:
+                            {
+                                sec.Headers[MsWord.WdHeaderFooterIndex.wdHeaderFooterPrimary].LinkToPrevious = false;
+                                sec.Headers[MsWord.WdHeaderFooterIndex.wdHeaderFooterPrimary].Range.Text = "Reference";
+                                break;
+                            }
+                    }
+                }
+
+                doc.Save();
+                doc.Close();
+                app.Quit();
+                Marshal.ReleaseComObject(app);
+                MessageBox.Show("Finished!");
+            }
         }
     }
 

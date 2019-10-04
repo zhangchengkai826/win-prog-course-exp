@@ -29,10 +29,17 @@ namespace win_prog_course_exp
             var comType = Type.GetTypeFromCLSID(guid);
             com = Activator.CreateInstance(comType) as ICOMZck;
         }
-
         private void Btn_Word1_Click(object sender, RoutedEventArgs e)
         {
             com.doTask1();
+        }
+        private void Btn_Word2_Click(object sender, RoutedEventArgs e)
+        {
+            com.doTask2();
+        }
+        private void Btn_Word3_Click(object sender, RoutedEventArgs e)
+        {
+            com.doTask3();
         }
     }
 }

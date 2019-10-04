@@ -25,14 +25,14 @@
                     </Button>
                 </Grid>
                 <Grid Grid.Row="1" Grid.Column="0">
-                    <Button Background="Honeydew">
+                    <Button Background="Honeydew" Click="Btn_Word2_Click">
                         <TextBlock FontSize="14">
                             Task 2: 使用Word COM组件在一个Word文档中添加艺术字
                         </TextBlock>
                     </Button>
                 </Grid>
                 <Grid Grid.Row="2" Grid.Column="0">
-                    <Button Background="Ivory">
+                    <Button Background="Ivory" Click="Btn_Word3_Click">
                         <TextBlock FontSize="14">
                             Task 3: 使用Word COM组件在一个Word文档每小节的页眉处添加不同的文本信息
                         </TextBlock>
