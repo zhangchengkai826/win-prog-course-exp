@@ -11,6 +11,7 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Collections.Generic;
 using System.Dynamic;
+using System.Drawing;
 
 namespace comzck
 {
@@ -167,7 +168,7 @@ namespace comzck
                     int bindingNameId = 0;
                     foreach (MsExcel.Range c in r.Cells)
                     {
-                        var v = c.Value as string;
+                        var v = c.Value.ToString();
                         ((IDictionary<string, object>)row)[bindingNames[bindingNameId]] = v;
                         bindingNameId++;
                     }
@@ -182,11 +183,61 @@ namespace comzck
         }
         public void doTask2()
         {
+            var openFileDialog = new CommonOpenFileDialog();
+            openFileDialog.Filters.Add(new CommonFileDialogFilter("Excel Documents", "*.xlsx"));
+            if (openFileDialog.ShowDialog() == CommonFileDialogResult.Ok)
+            {
+                var app = new MsExcel.Application();
+                var fileName = openFileDialog.FileName;
+                var xls = app.Workbooks.Open(fileName);
+                xls.Activate();
 
+                var sheet = xls.Worksheets[1] as MsExcel.Worksheet;
+                sheet.Activate();
+                var content = app.Cells.SpecialCells(MsExcel.XlCellType.xlCellTypeConstants);
+
+                content.Cells.Borders[MsExcel.XlBordersIndex.xlEdgeLeft].LineStyle = MsExcel.XlLineStyle.xlContinuous;
+                content.Cells.Borders[MsExcel.XlBordersIndex.xlEdgeRight].LineStyle = MsExcel.XlLineStyle.xlContinuous;
+                content.Cells.Borders[MsExcel.XlBordersIndex.xlEdgeTop].LineStyle = MsExcel.XlLineStyle.xlContinuous;
+                content.Cells.Borders[MsExcel.XlBordersIndex.xlEdgeBottom].LineStyle = MsExcel.XlLineStyle.xlContinuous;
+                content.Cells.Borders.Color = Color.Black;
+
+                xls.Save();
+                xls.Close();
+                app.Quit();
+                Marshal.ReleaseComObject(app);
+                MessageBox.Show("Finished!");
+            }
         }
         public void doTask3()
         {
+            var openFileDialog = new CommonOpenFileDialog();
+            openFileDialog.Filters.Add(new CommonFileDialogFilter("Excel Documents", "*.xlsx"));
+            if (openFileDialog.ShowDialog() == CommonFileDialogResult.Ok)
+            {
+                var app = new MsExcel.Application();
+                var fileName = openFileDialog.FileName;
+                var xls = app.Workbooks.Open(fileName);
+                xls.Activate();
 
+                var sheet = xls.Worksheets[1] as MsExcel.Worksheet;
+                var chartSheet = xls.Worksheets.Add() as MsExcel.Worksheet;
+                chartSheet.Name = sheet.Name + "-图表";
+
+                var chartObjs = chartSheet.ChartObjects(Type.Missing) as MsExcel.ChartObjects;
+                var chartObj = chartObjs.Add(32, 32, 1024, 1024);
+                var chart = chartObj.Chart;
+                chart.HasTitle = true;
+                chart.ChartTitle.Caption = "课本数量";
+                chart.ChartType = MsExcel.XlChartType.xlPie;
+                chart.SetSourceData(sheet.Range["A2:A52,F2:F52"]);
+
+                xls.Save();
+                xls.Close();
+                app.Quit();
+                Marshal.ReleaseComObject(app);
+                MessageBox.Show("Finished!");
+            }
         }
     }
 }
