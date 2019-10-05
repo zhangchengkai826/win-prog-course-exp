@@ -52,28 +52,28 @@
                     <RowDefinition Height="3*" />
                 </Grid.RowDefinitions>
                 <Grid Grid.Row="0" Grid.Column="0">
-                    <Button Background="AliceBlue">
+                    <Button Background="AliceBlue" Click="Btn_Excel1_Click">
                         <TextBlock FontSize="14">
                             Task 1: 将一个Excel表格中的信息显示到右侧的DataGrid
                         </TextBlock>
                     </Button>
                 </Grid>
                 <Grid Grid.Row="1" Grid.Column="0">
-                    <Button Background="Honeydew">
+                    <Button Background="Honeydew" Click="Btn_Excel2_Click">
                         <TextBlock FontSize="14">
                             Task 2: 将一个Excel表格的边框设置为黑实线
                         </TextBlock>
                     </Button>
                 </Grid>
                 <Grid Grid.Row="2" Grid.Column="0">
-                    <Button Background="Ivory">
+                    <Button Background="Ivory" Click="Btn_Excel3_Click">
                         <TextBlock FontSize="14">
                             Task 3: 向一个Excel文件中添加图表
                         </TextBlock>
                     </Button>
                 </Grid>
                 <Grid Grid.Row="0" Grid.Column="1" Grid.RowSpan="3">
-                    <DataGrid />
+                    <DataGrid Name="DataArea" IsReadOnly="True" CanUserAddRows="False" CanUserDeleteRows="False" CanUserReorderColumns="False" CanUserResizeRows="False" />
                 </Grid>
             </Grid>
         </TabItem>

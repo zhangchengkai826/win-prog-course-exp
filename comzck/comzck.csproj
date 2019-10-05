@@ -12,8 +12,11 @@
 
   <ItemGroup>
     <PackageReference Include="Bundle.Microsoft.Office.Interop" Version="15.0.4569" />
+    <PackageReference Include="Microsoft.CSharp" Version="4.6.0" />
+    <PackageReference Include="Microsoft.Office.Interop.Excel" Version="15.0.4795.1000" />
     <PackageReference Include="Microsoft.Office.Interop.Word" Version="15.0.4797.1003" />
     <PackageReference Include="Microsoft.WindowsAPICodePack.Shell" Version="1.1.0" />
+    <PackageReference Include="WindowsBase" Version="4.6.1055" />
   </ItemGroup>
 
   <ItemGroup>

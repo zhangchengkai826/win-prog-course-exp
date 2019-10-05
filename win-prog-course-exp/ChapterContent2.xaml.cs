@@ -21,25 +21,41 @@ namespace win_prog_course_exp
     /// </summary>
     public partial class ChapterContent2 : UserControl
     {
-        private ICOMZck com;
+        private ICOMZck comWord;
+        private ICOMZck comExcel;
         public ChapterContent2()
         {
             InitializeComponent();
             var guid = new Guid("9D9B759B-55E4-4FFC-B9DF-D7F2230B3439");
             var comType = Type.GetTypeFromCLSID(guid);
-            com = Activator.CreateInstance(comType) as ICOMZck;
+            comWord = Activator.CreateInstance(comType) as ICOMZck;
+            guid = new Guid("2FE12FD0-6AF0-4575-9EBB-D6A692FEFF9D");
+            comType = Type.GetTypeFromCLSID(guid);
+            comExcel = Activator.CreateInstance(comType) as ICOMZck;
         }
         private void Btn_Word1_Click(object sender, RoutedEventArgs e)
         {
-            com.doTask1();
+            comWord.doTask1(null);
         }
         private void Btn_Word2_Click(object sender, RoutedEventArgs e)
         {
-            com.doTask2();
+            comWord.doTask2();
         }
         private void Btn_Word3_Click(object sender, RoutedEventArgs e)
         {
-            com.doTask3();
+            comWord.doTask3();
+        }
+        private void Btn_Excel1_Click(object sender, RoutedEventArgs e)
+        {
+            comExcel.doTask1(DataArea);
+        }
+        private void Btn_Excel2_Click(object sender, RoutedEventArgs e)
+        {
+            comExcel.doTask2();
+        }
+        private void Btn_Excel3_Click(object sender, RoutedEventArgs e)
+        {
+            comExcel.doTask3();
         }
     }
 }

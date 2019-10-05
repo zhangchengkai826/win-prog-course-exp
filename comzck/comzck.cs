@@ -5,7 +5,12 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Windows;
 using MsWord = Microsoft.Office.Interop.Word;
+using MsExcel = Microsoft.Office.Interop.Excel;
 using Microsoft.Office.Core;
+using System.Windows.Controls;
+using System.Windows.Data;
+using System.Collections.Generic;
+using System.Dynamic;
 
 namespace comzck
 {
@@ -13,7 +18,7 @@ namespace comzck
     [ComVisible(true)]
     public interface ICOMZck
     {
-        void doTask1();
+        void doTask1(object param);
         void doTask2();
         void doTask3();
     }
@@ -23,7 +28,7 @@ namespace comzck
     [ClassInterface(ClassInterfaceType.None)]
     internal class WordCOMZck : ICOMZck
     {
-        public void doTask1()
+        public void doTask1(object param)
         {
             var openFileDialog = new CommonOpenFileDialog();
             openFileDialog.IsFolderPicker = true;
@@ -120,9 +125,60 @@ namespace comzck
     [ClassInterface(ClassInterfaceType.None)]
     internal class ExcelCOMZck : ICOMZck
     {
-        public void doTask1()
+        public void doTask1(object param)
         {
+            var openFileDialog = new CommonOpenFileDialog();
+            openFileDialog.Filters.Add(new CommonFileDialogFilter("Excel Documents", "*.xlsx"));
+            if (openFileDialog.ShowDialog() == CommonFileDialogResult.Ok)
+            {
+                var missing = System.Reflection.Missing.Value;
+                var app = new MsExcel.Application();
+                var fileName = openFileDialog.FileName;
+                var xls = app.Workbooks.Open(fileName, missing, true);
+                xls.Activate();
 
+                var sheet = xls.Worksheets[1] as MsExcel.Worksheet;
+                sheet.Activate();
+                var content = app.Cells.SpecialCells(MsExcel.XlCellType.xlCellTypeConstants);
+                var grid = param as DataGrid;
+                grid.Items.Clear();
+                grid.Columns.Clear();
+
+                var headers = content.Rows[1] as MsExcel.Range;
+                var bindingNames = new List<string>();
+                foreach (MsExcel.Range r in headers.Cells)
+                {
+                    var header = r.Value as string;
+                    var bindingName = header.Replace(' ', '-');
+                    var columnDef = new DataGridTextColumn() { Header = header, Binding = new Binding(bindingName) };
+                    grid.Columns.Add(columnDef);
+                    bindingNames.Add(bindingName);
+                }
+
+                bool isHeaderRow = true;
+                foreach (MsExcel.Range r in content.Rows)
+                {
+                    if(isHeaderRow)
+                    {
+                        isHeaderRow = false;
+                        continue;
+                    }
+                    dynamic row = new ExpandoObject();
+                    int bindingNameId = 0;
+                    foreach (MsExcel.Range c in r.Cells)
+                    {
+                        var v = c.Value as string;
+                        ((IDictionary<string, object>)row)[bindingNames[bindingNameId]] = v;
+                        bindingNameId++;
+                    }
+                    grid.Items.Add(row);
+                }
+
+                xls.Close(false);
+                app.Quit();
+                Marshal.ReleaseComObject(app);
+                MessageBox.Show("Finished!");
+            }
         }
         public void doTask2()
         {
