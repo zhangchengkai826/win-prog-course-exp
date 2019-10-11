@@ -8,6 +8,9 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <TabControl HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+        <TabItem Header="实验说明">
+            <Image Source="/Resources/exp1.png" />
+        </TabItem>
         <TabItem Header="注册表操作">
             <Grid>
                 <Grid.ColumnDefinitions>
