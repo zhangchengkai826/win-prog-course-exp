@@ -7,6 +7,9 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <TabControl HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+        <TabItem Header="实验说明">
+            <Image Source="/Resources/exp2.png" />
+        </TabItem>
         <TabItem Header="Word COM 操作">
             <Grid>
                 <Grid.ColumnDefinitions>
