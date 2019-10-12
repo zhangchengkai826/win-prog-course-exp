@@ -46,6 +46,31 @@
                     </Grid>
                 </Grid>
             </TabItem>
+            <TabItem Header="管道机制">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="2*" />
+                        <ColumnDefinition Width="2*" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <Grid Grid.Row="0" Grid.Column="0">
+                        <Button Background="AliceBlue" Click="OpenServer">
+                            <TextBlock FontSize="14">
+                                启动服务器
+                            </TextBlock>
+                        </Button>
+                    </Grid>
+                    <Grid Grid.Row="0" Grid.Column="1">
+                        <Button Background="Honeydew" Click="OpenClient">
+                            <TextBlock FontSize="14">
+                                启动客户端
+                            </TextBlock>
+                        </Button>
+                    </Grid>
+                </Grid>
+            </TabItem>
         </TabControl>
     </Grid>
 </UserControl>

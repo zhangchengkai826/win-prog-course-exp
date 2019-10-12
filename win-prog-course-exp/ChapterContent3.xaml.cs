@@ -97,5 +97,15 @@ namespace win_prog_course_exp
                 process.StandardInput.WriteLine(strCmd);
             }
         }
+
+        private void OpenServer(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void OpenClient(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }
