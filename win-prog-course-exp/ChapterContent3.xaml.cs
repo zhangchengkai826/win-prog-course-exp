@@ -100,12 +100,24 @@ namespace win_prog_course_exp
 
         private void OpenServer(object sender, RoutedEventArgs e)
         {
-
+            Process process = new Process();
+            process.StartInfo.FileName = "../../../zckserver/bin/Debug/zckserver.exe";
+            // 不使用外壳程序
+            process.StartInfo.UseShellExecute = false;
+            // 不在新窗口中启动该进程
+            process.StartInfo.CreateNoWindow = true;
+            process.Start();
         }
 
         private void OpenClient(object sender, RoutedEventArgs e)
         {
-
+            Process process = new Process();
+            process.StartInfo.FileName = "../../../zckclient/bin/Debug/zckclient.exe";
+            // 不使用外壳程序
+            process.StartInfo.UseShellExecute = false;
+            // 不在新窗口中启动该进程
+            process.StartInfo.CreateNoWindow = true;
+            process.Start();
         }
     }
 }

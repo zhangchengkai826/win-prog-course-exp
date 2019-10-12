@@ -58,14 +58,14 @@
                     <Grid Grid.Row="0" Grid.Column="0">
                         <Button Background="AliceBlue" Click="OpenServer">
                             <TextBlock FontSize="14">
-                                启动服务器
+                                启动服务器进程
                             </TextBlock>
                         </Button>
                     </Grid>
                     <Grid Grid.Row="0" Grid.Column="1">
                         <Button Background="Honeydew" Click="OpenClient">
                             <TextBlock FontSize="14">
-                                启动客户端
+                                启动客户端进程
                             </TextBlock>
                         </Button>
                     </Grid>
