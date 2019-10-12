@@ -14,6 +14,8 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.IO.Pipes;
 using System.IO;
+using System.Windows.Interop;
+using System.Runtime.InteropServices;
 
 namespace zckserver
 {
@@ -22,9 +24,17 @@ namespace zckserver
     /// </summary>
     public partial class MainWindow : Window
     {
+        [DllImport("user32.dll", CharSet = CharSet.Auto)]
+        private static extern IntPtr SendMessage(IntPtr hWnd, UInt32 Msg, IntPtr wParam, StringBuilder lParam);
+        private const int DATA_RECV = 0x500;
+        private HwndSource source;
+        private IntPtr hWnd;
         public MainWindow()
         {
             InitializeComponent();
+            hWnd = new WindowInteropHelper(this).EnsureHandle();
+            source = HwndSource.FromHwnd(hWnd);
+            source.AddHook(new HwndSourceHook(WndProc));
             Task.Factory.StartNew(() =>
             {
                 var pipe = new NamedPipeServerStream("pipeZck", PipeDirection.In);
@@ -34,23 +44,34 @@ namespace zckserver
                     var reader = new StreamReader(pipe);
                     while (true)
                     {
-                        try
+                        var line = reader.ReadLine();
+                        if(line == null)
                         {
-                            var line = reader.ReadLine();
-                            if(line.Length > 0)
-                            {
-                                Log.Text += "收到来自客户端的数据： " + line + "\n";
-                            }
-                        }
-                        catch(IOException e)
-                        {
-                            Log.Text += e.Message + "\n";
                             break;
                         }
+                        if(line.Length > 0)
+                        {
+                            var data = "收到来自客户端的数据： " + line + "\n";
+                            SendMessage(hWnd, DATA_RECV, (IntPtr)0, new StringBuilder(data));
+                        }
                     }
-                    pipe.Close();
+                    pipe.Disconnect();
                 }
             });
+        }
+        private IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
+        {
+            handled = false;
+            switch (msg)
+            {
+                case DATA_RECV:
+                    {
+                        Log.Text += Marshal.PtrToStringAuto(lParam);
+                        handled = true;
+                        break;
+                    }
+            }
+            return IntPtr.Zero;
         }
     }
 }
