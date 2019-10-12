@@ -12,6 +12,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.IO.Pipes;
+using System.IO;
 
 namespace zckserver
 {
@@ -23,6 +25,32 @@ namespace zckserver
         public MainWindow()
         {
             InitializeComponent();
+            Task.Factory.StartNew(() =>
+            {
+                var pipe = new NamedPipeServerStream("pipeZck", PipeDirection.In);
+                while (true)
+                {
+                    pipe.WaitForConnection();
+                    var reader = new StreamReader(pipe);
+                    while (true)
+                    {
+                        try
+                        {
+                            var line = reader.ReadLine();
+                            if(line.Length > 0)
+                            {
+                                Log.Text += "收到来自客户端的数据： " + line + "\n";
+                            }
+                        }
+                        catch(IOException e)
+                        {
+                            Log.Text += e.Message + "\n";
+                            break;
+                        }
+                    }
+                    pipe.Close();
+                }
+            });
         }
     }
 }

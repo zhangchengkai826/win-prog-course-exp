@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
+using System.IO.Pipes;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -27,7 +29,16 @@ namespace zckclient
 
         private void Send(object sender, RoutedEventArgs e)
         {
-
+            var pipe = new NamedPipeClientStream(".", "pipeZck", PipeDirection.Out);
+            pipe.Connect();
+            var writer = new StreamWriter(pipe);
+            var text = Msg.Text;
+            if(text.Length > 0)
+            {
+                writer.WriteLine(Msg.Text);
+                writer.Flush();
+            }
+            pipe.Close();
         }
     }
 }

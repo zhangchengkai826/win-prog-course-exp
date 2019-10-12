@@ -18,8 +18,8 @@
         <Grid Grid.Row="0" Background="Bisque">
             <TextBlock Text="客户端进程" HorizontalAlignment="Center" VerticalAlignment="Center" />
         </Grid>
-        <Grid Grid.Row="1" Background="Azure">
-            <TextBox Text="" HorizontalAlignment="Center" VerticalAlignment="Center" />
+        <Grid Grid.Row="1">
+            <TextBox Name="Msg" Background="Azure" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Text="" />
         </Grid>
         <Grid Grid.Row="2">
             <Button Click="Send" Background="Cornsilk">

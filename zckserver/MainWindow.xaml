@@ -17,8 +17,8 @@
         <Grid Grid.Row="0" Background="Beige">
             <TextBlock Text="服务器进程" HorizontalAlignment="Center" VerticalAlignment="Center" />
         </Grid>
-        <Grid Grid.Row="1" Background="AliceBlue">
-            <TextBlock Text="" HorizontalAlignment="Center" VerticalAlignment="Center" />
+        <Grid Grid.Row="1">
+            <TextBlock Name="Log" Text="" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="AliceBlue"/>
         </Grid>
     </Grid>
 </Window>
