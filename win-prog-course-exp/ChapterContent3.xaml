@@ -31,14 +31,14 @@
                         </TextBlock>
                     </Grid>
                     <Grid Grid.Row="1" Grid.Column="0">
-                        <Button Background="Honeydew" Click="Button_Click">
+                        <Button Background="Honeydew" Click="Shutdown">
                             <TextBlock FontSize="14">
                                 调用shutdown命令关闭电脑
                             </TextBlock>
                         </Button>
                     </Grid>
                     <Grid Grid.Row="1" Grid.Column="1">
-                        <Button Background="Ivory" Click="Button_Click_1">
+                        <Button Background="Ivory" Click="Restart">
                             <TextBlock FontSize="14">
                                 调用shutdown命令重启电脑
                             </TextBlock>

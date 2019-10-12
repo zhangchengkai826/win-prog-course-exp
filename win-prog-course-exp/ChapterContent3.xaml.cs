@@ -62,14 +62,40 @@ namespace win_prog_course_exp
             getMacOutputLineId++;
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void Shutdown(object sender, RoutedEventArgs e)
         {
-
+            if(MessageBox.Show("是否关机？", "Confirmation", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+            {
+                Process process = new Process();
+                process.StartInfo.FileName = "cmd.exe";
+                // 不使用外壳程序
+                process.StartInfo.UseShellExecute = false;
+                // 不在新窗口中启动该进程
+                process.StartInfo.CreateNoWindow = true;
+                // 重定向输入流
+                process.StartInfo.RedirectStandardInput = true;
+                string strCmd = "shutdown /s /t 0 /f";
+                process.Start();
+                process.StandardInput.WriteLine(strCmd);
+            }
         }
 
-        private void Button_Click_1(object sender, RoutedEventArgs e)
+        private void Restart(object sender, RoutedEventArgs e)
         {
-
+            if (MessageBox.Show("是否重启？", "Confirmation", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+            {
+                Process process = new Process();
+                process.StartInfo.FileName = "cmd.exe";
+                // 不使用外壳程序
+                process.StartInfo.UseShellExecute = false;
+                // 不在新窗口中启动该进程
+                process.StartInfo.CreateNoWindow = true;
+                // 重定向输入流
+                process.StartInfo.RedirectStandardInput = true;
+                string strCmd = "shutdown /r /t 0 /f";
+                process.Start();
+                process.StandardInput.WriteLine(strCmd);
+            }
         }
     }
 }
