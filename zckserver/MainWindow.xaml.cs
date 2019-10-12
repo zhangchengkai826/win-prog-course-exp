@@ -29,9 +29,16 @@ namespace zckserver
         private const int DATA_RECV = 0x500;
         private HwndSource source;
         private IntPtr hWnd;
+        public class OnDataRecvArgs: EventArgs
+        {
+            public string text;
+        }
+        public delegate void OnDataRecvHandler(object sender, OnDataRecvArgs args);
+        public event OnDataRecvHandler OnDataRecv;
         public MainWindow()
         {
             InitializeComponent();
+            OnDataRecv += new OnDataRecvHandler(ProcessRecvedData);
             hWnd = new WindowInteropHelper(this).EnsureHandle();
             source = HwndSource.FromHwnd(hWnd);
             source.AddHook(new HwndSourceHook(WndProc));
@@ -66,12 +73,16 @@ namespace zckserver
             {
                 case DATA_RECV:
                     {
-                        Log.Text += Marshal.PtrToStringAuto(lParam);
+                        OnDataRecv(this, new OnDataRecvArgs() { text = Marshal.PtrToStringAuto(lParam) });
                         handled = true;
                         break;
                     }
             }
             return IntPtr.Zero;
+        }
+        private void ProcessRecvedData(object sender, OnDataRecvArgs args)
+        {
+            Log.Text += args.text;
         }
     }
 }
