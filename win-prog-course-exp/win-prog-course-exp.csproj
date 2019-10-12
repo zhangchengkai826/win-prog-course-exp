@@ -67,6 +67,9 @@
     <Compile Include="ChapterContent2.xaml.cs">
       <DependentUpon>ChapterContent2.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ChapterContent3.xaml.cs">
+      <DependentUpon>ChapterContent3.xaml</DependentUpon>
+    </Compile>
     <Compile Include="NewStringValueDlg.xaml.cs">
       <DependentUpon>NewStringValueDlg.xaml</DependentUpon>
     </Compile>
@@ -76,6 +79,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="ChapterContent2.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ChapterContent3.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
