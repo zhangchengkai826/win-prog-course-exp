@@ -15,6 +15,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Microsoft.Win32;
 
 namespace win_prog_course_exp
 {
@@ -24,6 +25,7 @@ namespace win_prog_course_exp
     public partial class ChapterContent6 : UserControl
     {
         private DataSet data;
+        private string pathOfFile;
         public ChapterContent6()
         {
             InitializeComponent();
@@ -32,19 +34,40 @@ namespace win_prog_course_exp
 
         private void OpenExcel(object sender, RoutedEventArgs e)
         {
-            var pathOfFile = @"C:\Users\andys\Desktop\hw6-test\table.xlsx";
-            var sheetName = "2017级$";
+            var openFileDialog = new OpenFileDialog();
+            openFileDialog.Filter = "Excel Documents | *.xlsx";
+            if (openFileDialog.ShowDialog() == true)
+            {
+                pathOfFile = openFileDialog.FileName;
+
+                var mCon = new OleDbConnection();
+                mCon.ConnectionString = @"Provider =Microsoft.ACE.OLEDB.16.0;data source=" + pathOfFile + ";Extended Properties=\"Excel 12.0;HDR=YES\";";
+                mCon.Open();
+                var sheetsTable = mCon.GetOleDbSchemaTable(OleDbSchemaGuid.Tables, null);
+                mCon.Close();
+
+                var sheetNamesTable = (new DataView(sheetsTable)).ToTable(false, new string[] { "TABLE_NAME" });
+                TableNamePresenter.DataContext = sheetNamesTable;
+                
+                MessageBox.Show("Finished!");
+            }
+        }
+
+        private void OpenSheet(object sender, RoutedEventArgs e)
+        {
+            var dataRow = TableNamePresenter.SelectedItem as DataRowView;
+            var sheetName = dataRow.Row.ItemArray[0].ToString();
 
             var mCon = new OleDbConnection();
             mCon.ConnectionString = @"Provider =Microsoft.ACE.OLEDB.16.0;data source=" + pathOfFile + ";Extended Properties=\"Excel 12.0;HDR=YES\";";
             mCon.Open();
             var strSelectQuery = "SELECT * FROM [" + sheetName + "]";
             var DataAdapter = new OleDbDataAdapter(strSelectQuery, mCon);
-            DataAdapter.Fill(data);
             mCon.Close();
 
+            DataAdapter.Fill(data);
             DataPresenter.DataContext = data.Tables[0].DefaultView;
-            MessageBox.Show("Finished!");
+            MessageBox.Show(string.Format("数据表\"{0}\"已打开", sheetName));
         }
     }
 }

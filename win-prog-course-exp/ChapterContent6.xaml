@@ -11,20 +11,32 @@
             <TabItem Header="Excel读写操作">
                 <Grid>
                     <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="160" />
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="20" />
                         <RowDefinition Height="*" />
+                        <RowDefinition Height="20" />
                     </Grid.RowDefinitions>
-                    <Grid Grid.Row="0" Grid.Column="0">
+                    <Grid Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2">
                         <Button Background="Honeydew" Click="OpenExcel">
                             <TextBlock FontSize="14">
                                 选择Excel数据文件
                             </TextBlock>
                         </Button>
                     </Grid>
+                    <Grid Grid.Row="2" Grid.Column="0">
+                        <Button Background="Azure" Click="OpenSheet">
+                            <TextBlock FontSize="14">
+                                打开数据表
+                            </TextBlock>
+                        </Button>
+                    </Grid>
                     <Grid Grid.Row="1" Grid.Column="0">
+                        <DataGrid Name="TableNamePresenter" ItemsSource="{Binding}" />
+                    </Grid>
+                    <Grid Grid.Row="1" Grid.Column="1" Grid.RowSpan="2">
                         <DataGrid Name="DataPresenter" ItemsSource="{Binding}" />
                     </Grid>
                 </Grid>
