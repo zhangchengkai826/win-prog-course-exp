@@ -29,6 +29,9 @@ namespace win_prog_course_exp
             ChapterSideSelectorItem.Items.Add(new ChapterSideSelectorItem() { Title = "实验一" });
             ChapterSideSelectorItem.Items.Add(new ChapterSideSelectorItem() { Title = "实验二" });
             ChapterSideSelectorItem.Items.Add(new ChapterSideSelectorItem() { Title = "实验三" });
+            ChapterSideSelectorItem.Items.Add(new ChapterSideSelectorItem() { Title = "实验四" });
+            ChapterSideSelectorItem.Items.Add(new ChapterSideSelectorItem() { Title = "实验五" });
+            ChapterSideSelectorItem.Items.Add(new ChapterSideSelectorItem() { Title = "实验六" });
             chapterSideSelector.ItemsSource = ChapterSideSelectorItem.Items;
             ChapterSideSelectorController.Instance.CurOnId = 0;
         }
