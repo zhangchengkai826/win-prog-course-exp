@@ -36,21 +36,21 @@
                         </Button>
                     </Grid>
                     <Grid Grid.Row="0" Grid.Column="1">
-                        <Button Background="Beige" Click="AddNew">
+                        <Button Background="Beige" Click="ExcelAddNew">
                             <TextBlock FontSize="14">
                                 新建
                             </TextBlock>
                         </Button>
                     </Grid>
                     <Grid Grid.Row="0" Grid.Column="2">
-                        <Button Background="Cornsilk" Click="Update">
+                        <Button Background="Cornsilk" Click="ExcelUpdate">
                             <TextBlock FontSize="14">
                                 更新
                             </TextBlock>
                         </Button>
                     </Grid>
                     <Grid Grid.Row="0" Grid.Column="3">
-                        <Button Background="AntiqueWhite" Click="Delete">
+                        <Button Background="AntiqueWhite" Click="ExcelDelete">
                             <TextBlock FontSize="14">
                                 清除
                             </TextBlock>
@@ -61,6 +61,62 @@
                     </Grid>
                     <Grid Grid.Row="1" Grid.Column="1" Grid.RowSpan="2" Grid.ColumnSpan="3">
                         <DataGrid Name="DataPresenter" CanUserDeleteRows="False" CanUserAddRows="False" CanUserResizeRows="False" />
+                    </Grid>
+                </Grid>
+            </TabItem>
+            <TabItem Header="MySQL读写操作">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="160" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="20" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="20" />
+                    </Grid.RowDefinitions>
+                    <Grid Grid.Row="0" Grid.Column="0">
+                        <Button Background="Honeydew" Click="FindDBInstances">
+                            <TextBlock FontSize="14">
+                                查找数据库实例
+                            </TextBlock>
+                        </Button>
+                    </Grid>
+                    <Grid Grid.Row="2" Grid.Column="0">
+                        <Button Background="Azure" Click="SelectDBInstanceOrTable">
+                            <TextBlock Name="SelectBtnLbl" FontSize="14">
+                                选择数据库实例
+                            </TextBlock>
+                        </Button>
+                    </Grid>
+                    <Grid Grid.Row="0" Grid.Column="1">
+                        <Button Background="Beige" Click="DBInsert">
+                            <TextBlock FontSize="14">
+                                新建
+                            </TextBlock>
+                        </Button>
+                    </Grid>
+                    <Grid Grid.Row="0" Grid.Column="2">
+                        <Button Background="Cornsilk" Click="DBUpdate">
+                            <TextBlock FontSize="14">
+                                更新
+                            </TextBlock>
+                        </Button>
+                    </Grid>
+                    <Grid Grid.Row="0" Grid.Column="3">
+                        <Button Background="AntiqueWhite" Click="DBDelete">
+                            <TextBlock FontSize="14">
+                                删除
+                            </TextBlock>
+                        </Button>
+                    </Grid>
+                    <Grid Grid.Row="1" Grid.Column="0">
+                        <DataGrid Name="Selector" ItemsSource="{Binding}" IsReadOnly="True" />
+                    </Grid>
+                    <Grid Grid.Row="1" Grid.Column="1" Grid.RowSpan="2" Grid.ColumnSpan="3">
+                        <DataGrid Name="DBDataPresenter" CanUserDeleteRows="False" CanUserAddRows="False" CanUserResizeRows="False" />
                     </Grid>
                 </Grid>
             </TabItem>

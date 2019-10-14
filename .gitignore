@@ -1,6 +1,7 @@
 # Custom - Chengkai Zhang
 .vs
 *.snk
+db-account.txt
 
 # User-specific files
 *.suo
