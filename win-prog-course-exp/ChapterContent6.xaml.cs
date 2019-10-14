@@ -25,6 +25,7 @@ namespace win_prog_course_exp
     /// </summary>
     public partial class ChapterContent6 : UserControl
     {
+        private OleDbDataAdapter dataAdapter;
         private DataSet dataSet;
         public DataView View;
         private string pathOfFile;
@@ -42,7 +43,7 @@ namespace win_prog_course_exp
                 pathOfFile = openFileDialog.FileName;
 
                 var mCon = new OleDbConnection();
-                mCon.ConnectionString = @"Provider =Microsoft.ACE.OLEDB.16.0;data source=" + pathOfFile + ";Extended Properties=\"Excel 12.0;HDR=YES\";";
+                mCon.ConnectionString = @"Provider=Microsoft.ACE.OLEDB.16.0;data source=" + pathOfFile + ";Extended Properties=\"Excel 12.0;HDR=YES\";";
                 mCon.Open();
                 var sheetsTable = mCon.GetOleDbSchemaTable(OleDbSchemaGuid.Tables, null);
                 mCon.Close();
@@ -57,20 +58,49 @@ namespace win_prog_course_exp
         private void OpenSheet(object sender, RoutedEventArgs e)
         {
             var dataRow = TableNamePresenter.SelectedItem as DataRowView;
+            if(dataRow == null){
+                return;
+            }
             var sheetName = dataRow.Row.ItemArray[0].ToString();
 
             var mCon = new OleDbConnection();
             mCon.ConnectionString = @"Provider =Microsoft.ACE.OLEDB.16.0;data source=" + pathOfFile + ";Extended Properties=\"Excel 12.0;HDR=YES\";";
             mCon.Open();
             var strSelectQuery = "SELECT * FROM [" + sheetName + "]";
-            var DataAdapter = new OleDbDataAdapter(strSelectQuery, mCon);
+            dataAdapter = new OleDbDataAdapter(strSelectQuery, mCon);
             mCon.Close();
 
             dataSet = new DataSet();
-            DataAdapter.Fill(dataSet);
+            dataAdapter.Fill(dataSet);
             View = dataSet.Tables[0].DefaultView;
             DataPresenter.ItemsSource = View;
             MessageBox.Show(string.Format("数据表\"{0}\"已打开", sheetName));
+        }
+
+        private void AddNew(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void Update(object sender, RoutedEventArgs e)
+        {
+            int rowId = 0;
+            foreach (DataRow row in View.Table.Rows)
+            {
+                int colId = 0;
+                foreach(var cell in row.ItemArray)
+                {
+                    dataSet.Tables[0].Rows[rowId].ItemArray[colId] = cell;
+                    colId++;
+                }
+                rowId++;
+            }
+            dataAdapter.Update(dataSet);
+        }
+
+        private void Delete(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }
