@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Data;
 using System.Data.OleDb;
 using System.Data.SqlClient;
@@ -24,12 +25,12 @@ namespace win_prog_course_exp
     /// </summary>
     public partial class ChapterContent6 : UserControl
     {
-        private DataSet data;
+        private DataSet dataSet;
+        public DataView View;
         private string pathOfFile;
         public ChapterContent6()
         {
             InitializeComponent();
-            data = new DataSet();
         }
 
         private void OpenExcel(object sender, RoutedEventArgs e)
@@ -65,8 +66,10 @@ namespace win_prog_course_exp
             var DataAdapter = new OleDbDataAdapter(strSelectQuery, mCon);
             mCon.Close();
 
-            DataAdapter.Fill(data);
-            DataPresenter.DataContext = data.Tables[0].DefaultView;
+            dataSet = new DataSet();
+            DataAdapter.Fill(dataSet);
+            View = dataSet.Tables[0].DefaultView;
+            DataPresenter.ItemsSource = View;
             MessageBox.Show(string.Format("数据表\"{0}\"已打开", sheetName));
         }
     }

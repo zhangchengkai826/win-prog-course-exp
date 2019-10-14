@@ -37,7 +37,7 @@
                         <DataGrid Name="TableNamePresenter" ItemsSource="{Binding}" />
                     </Grid>
                     <Grid Grid.Row="1" Grid.Column="1" Grid.RowSpan="2">
-                        <DataGrid Name="DataPresenter" ItemsSource="{Binding}" />
+                        <DataGrid Name="DataPresenter" />
                     </Grid>
                 </Grid>
             </TabItem>
