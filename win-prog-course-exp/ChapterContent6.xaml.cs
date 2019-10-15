@@ -209,21 +209,28 @@ namespace win_prog_course_exp
         private DataSet mysqlDataSet;
         private void FindDBInstances(object sender, RoutedEventArgs e)
         {
-            var dlg = new InsertDlg(new string[] { "用户名", "密码" });
+            var dlg = new PasswdDlg();
             if (dlg.ShowDialog() == true)
             {
-                mysqlUser = dlg.Items[0].Value as string;
-                mysqlPw = dlg.Items[1].Value as string;
+                mysqlUser = dlg.InputUser.Text;
+                mysqlPw = dlg.InputPw.Password;
                 mysqlCurConnStr = "SERVER=" + mysqlServer + ";" + "DATABASE=" + mysqlDefaultDB + ";" + "UID=" + mysqlUser + ";" + "PASSWORD=" + mysqlPw + ";";
-                var connection = new MySqlConnection(mysqlCurConnStr);
-                connection.Open();
-                var schema = connection.GetSchema("Databases");
-                connection.Close();
-                var dbNames = (new DataView(schema)).ToTable(false, new string[] { "database_name" });
-                dbNames.Columns[0].ColumnName = "数据库实例名";
-                Selector.ItemsSource = dbNames.DefaultView;
-                SelectBtnLbl.Text = "选择数据库实例";
-                mysqlIsDBInstanceSelected = false;
+                try
+                {
+                    var connection = new MySqlConnection(mysqlCurConnStr);
+                    connection.Open();
+                    var schema = connection.GetSchema("Databases");
+                    connection.Close();
+                    var dbNames = (new DataView(schema)).ToTable(false, new string[] { "database_name" });
+                    dbNames.Columns[0].ColumnName = "数据库实例名";
+                    Selector.ItemsSource = dbNames.DefaultView;
+                    SelectBtnLbl.Text = "选择数据库实例";
+                    mysqlIsDBInstanceSelected = false;
+                }
+                catch (MySqlException ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
             }
         }
 

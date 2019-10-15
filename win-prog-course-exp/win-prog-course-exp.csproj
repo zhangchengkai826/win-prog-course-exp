@@ -83,6 +83,9 @@
     <Compile Include="NewStringValueDlg.xaml.cs">
       <DependentUpon>NewStringValueDlg.xaml</DependentUpon>
     </Compile>
+    <Compile Include="PasswdDlg.xaml.cs">
+      <DependentUpon>PasswdDlg.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Util.cs" />
     <Page Include="ChapterContent1.xaml">
       <SubType>Designer</SubType>
@@ -132,6 +135,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="NewStringValueDlg.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="PasswdDlg.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
