@@ -74,6 +74,9 @@
     <Compile Include="ChapterContent4.xaml.cs">
       <DependentUpon>ChapterContent4.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ChapterContent5.xaml.cs">
+      <DependentUpon>ChapterContent5.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ChapterContent6.xaml.cs">
       <DependentUpon>ChapterContent6.xaml</DependentUpon>
     </Compile>
@@ -100,6 +103,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="ChapterContent4.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ChapterContent5.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
