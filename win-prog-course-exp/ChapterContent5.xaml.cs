@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -24,20 +25,42 @@ namespace win_prog_course_exp
         {
             InitializeComponent();
         }
+        private Process client;
+        private Process server;
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void OpenServer(object sender, RoutedEventArgs e)
         {
-
+            server = new Process();
+            server.StartInfo.FileName = "../../../zckserver-winform/bin/Debug/zckserver-winform.exe";
+            // 不使用外壳程序
+            server.StartInfo.UseShellExecute = false;
+            // 不在新窗口中启动该进程
+            server.StartInfo.CreateNoWindow = true;
+            server.Start();
         }
 
-        private void Button_Click_1(object sender, RoutedEventArgs e)
+        private void OpenClient(object sender, RoutedEventArgs e)
         {
-
+            client = new Process();
+            client.StartInfo.FileName = "../../../zckclient-winform/bin/Debug/zckclient-winform.exe";
+            // 不使用外壳程序
+            client.StartInfo.UseShellExecute = false;
+            // 不在新窗口中启动该进程
+            client.StartInfo.CreateNoWindow = true;
+            client.Start();
         }
 
-        private void Button_Click_2(object sender, RoutedEventArgs e)
+        private void CloseAll(object sender, RoutedEventArgs e)
         {
-
+            try
+            {
+                server.Kill();
+                client.Kill();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
     }
 }

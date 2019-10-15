@@ -19,21 +19,21 @@
                         <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
                     <Grid Grid.Row="0" Grid.Column="0">
-                        <Button Background="AliceBlue" Click="Button_Click">
+                        <Button Background="AliceBlue" Click="OpenServer">
                             <TextBlock FontSize="14">
                                 启动服务器进程
                             </TextBlock>
                         </Button>
                     </Grid>
                     <Grid Grid.Row="0" Grid.Column="1">
-                        <Button Background="Honeydew" Click="Button_Click_1">
+                        <Button Background="Honeydew" Click="OpenClient">
                             <TextBlock FontSize="14">
                                 启动客户端进程
                             </TextBlock>
                         </Button>
                     </Grid>
                     <Grid Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2">
-                        <Button Background="Beige" Click="Button_Click_2">
+                        <Button Background="Beige" Click="CloseAll">
                             <TextBlock FontSize="14">
                                 终止所有进程
                             </TextBlock>

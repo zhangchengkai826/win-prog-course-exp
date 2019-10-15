@@ -124,8 +124,15 @@ namespace win_prog_course_exp
 
         private void KillAllProcess(object sender, RoutedEventArgs e)
         {
-            server.Kill();
-            client.Kill();
+            try
+            {
+                server.Kill();
+                client.Kill();
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
     }
 }

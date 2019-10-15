@@ -28,6 +28,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "zckclient", "zckclient\zckc
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "zckserver-winform", "zckserver-winform\zckserver-winform.csproj", "{3CA81734-2B12-430E-8300-2516552B0D1E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "zckclient-winform", "zckclient-winform\zckclient-winform.csproj", "{3546A43C-BE1A-4354-8492-9331EB17F9FF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -121,6 +123,18 @@ Global
 		{3CA81734-2B12-430E-8300-2516552B0D1E}.Release|x64.Build.0 = Release|Any CPU
 		{3CA81734-2B12-430E-8300-2516552B0D1E}.Release|x86.ActiveCfg = Release|Any CPU
 		{3CA81734-2B12-430E-8300-2516552B0D1E}.Release|x86.Build.0 = Release|Any CPU
+		{3546A43C-BE1A-4354-8492-9331EB17F9FF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3546A43C-BE1A-4354-8492-9331EB17F9FF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3546A43C-BE1A-4354-8492-9331EB17F9FF}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{3546A43C-BE1A-4354-8492-9331EB17F9FF}.Debug|x64.Build.0 = Debug|Any CPU
+		{3546A43C-BE1A-4354-8492-9331EB17F9FF}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{3546A43C-BE1A-4354-8492-9331EB17F9FF}.Debug|x86.Build.0 = Debug|Any CPU
+		{3546A43C-BE1A-4354-8492-9331EB17F9FF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3546A43C-BE1A-4354-8492-9331EB17F9FF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3546A43C-BE1A-4354-8492-9331EB17F9FF}.Release|x64.ActiveCfg = Release|Any CPU
+		{3546A43C-BE1A-4354-8492-9331EB17F9FF}.Release|x64.Build.0 = Release|Any CPU
+		{3546A43C-BE1A-4354-8492-9331EB17F9FF}.Release|x86.ActiveCfg = Release|Any CPU
+		{3546A43C-BE1A-4354-8492-9331EB17F9FF}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
