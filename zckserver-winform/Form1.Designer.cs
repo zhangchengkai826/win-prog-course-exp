@@ -81,6 +81,8 @@ namespace zckserver_winform
             this.Name = "zckserver-winform-window";
             this.Text = "zck server (winform)";
             this.ResumeLayout(false);
+
+            OnDataRecv += new OnDataRecvHandler(ProcessRecvedData);
         }
 
         #endregion
@@ -89,7 +91,16 @@ namespace zckserver_winform
         private System.Windows.Forms.RichTextBox txtBox;
 
         private const int WM_COPYDATA = 0x004A;
-
+        public class OnDataRecvArgs : EventArgs
+        {
+            public string data;
+        }
+        public delegate void OnDataRecvHandler(object sender, OnDataRecvArgs args);
+        public event OnDataRecvHandler OnDataRecv;
+        private void ProcessRecvedData(object sender, OnDataRecvArgs args)
+        {
+            txtBox.Text += "收到来自客户端的数据： " + args.data + "\n"; ;
+        }
         protected override void DefWndProc(ref Message m)
         {
             switch (m.Msg)
@@ -97,7 +108,7 @@ namespace zckserver_winform
                 case WM_COPYDATA:
                     var cds = (COPYDATASTRUCT)m.GetLParam(typeof(COPYDATASTRUCT));
                     var txt = cds.lpData;
-                    txtBox.Text += "收到来自客户端的数据： " + txt + "\n"; ;
+                    OnDataRecv(this, new OnDataRecvArgs() { data = txt });
                     break;
                 default:
                     base.DefWndProc(ref m);
