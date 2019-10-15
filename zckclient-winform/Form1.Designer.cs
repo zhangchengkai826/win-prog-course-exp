@@ -1,9 +1,19 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Drawing;
 using System.IO;
 using System.IO.Pipes;
+using System.Runtime.InteropServices;
+using System.Text;
 
 namespace zckclient_winform
 {
+    public struct COPYDATASTRUCT
+    {
+        public IntPtr dwData;
+        public int cbData;
+        [MarshalAs(UnmanagedType.LPStr)]
+        public string lpData;
+    }
     partial class Form1
     {
         /// <summary>
@@ -83,18 +93,28 @@ namespace zckclient_winform
             this.ResumeLayout(false);
         }
 
+        [DllImport("User32.dll", EntryPoint = "SendMessage")]
+        private static extern int SendMessage(int hWnd, int Msg, int wParam, ref COPYDATASTRUCT lParam);
+
+        [DllImport("User32.dll", EntryPoint = "FindWindow")]
+        private static extern int FindWindow(string lpClassName, string lpWindowName);
+
+        private const int WM_COPYDATA = 0x004A;
         private void Send(object sender, System.EventArgs e)
         {
-            var pipe = new NamedPipeClientStream(".", "pipeZck", PipeDirection.Out);
-            pipe.Connect();
-            var writer = new StreamWriter(pipe);
-            var text = txtBox.Text;
-            if (text.Length > 0)
+            var hWnd = FindWindow(null, @"zck server (winform)");
+            if (hWnd == 0)
             {
-                writer.WriteLine(txtBox.Text);
-                writer.Flush();
+                System.Windows.Forms.MessageBox.Show("未找到消息接受者");
             }
-            pipe.Close();
+            else
+            {
+                COPYDATASTRUCT cds;
+                cds.dwData = IntPtr.Zero;
+                cds.cbData = System.Text.Encoding.Default.GetBytes(txtBox.Text).Length + 1;
+                cds.lpData = txtBox.Text;
+                SendMessage(hWnd, WM_COPYDATA, 0, ref cds);
+            }
         }
 
         private System.Windows.Forms.TableLayoutPanel tblLayout;

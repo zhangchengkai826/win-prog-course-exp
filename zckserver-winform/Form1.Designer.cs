@@ -1,10 +1,20 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Drawing;
 using System.IO;
 using System.IO.Pipes;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace zckserver_winform
 {
+    public struct COPYDATASTRUCT
+    {
+        public IntPtr dwData;
+        public int cbData;
+        [MarshalAs(UnmanagedType.LPStr)]
+        public string lpData;
+    }
     partial class Form1
     {
         /// <summary>
@@ -43,7 +53,7 @@ namespace zckserver_winform
             lbl.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             lbl.BackColor = Color.Beige;
 
-            var txtBox = new System.Windows.Forms.RichTextBox();
+            txtBox = new System.Windows.Forms.RichTextBox();
             txtBox.Dock = System.Windows.Forms.DockStyle.Fill;
             txtBox.Location = new System.Drawing.Point(0, 0);
             txtBox.Name = "txtBox";
@@ -68,37 +78,32 @@ namespace zckserver_winform
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
             this.Controls.Add(this.tblLayout);
-            this.Name = "Form1";
+            this.Name = "zckserver-winform-window";
             this.Text = "zck server (winform)";
             this.ResumeLayout(false);
-
-            Task.Factory.StartNew(() =>
-            {
-                var pipe = new NamedPipeServerStream("pipeZck", PipeDirection.In);
-                while (true)
-                {
-                    pipe.WaitForConnection();
-                    var reader = new StreamReader(pipe);
-                    while (true)
-                    {
-                        var line = reader.ReadLine();
-                        if (line == null)
-                        {
-                            break;
-                        }
-                        if (line.Length > 0)
-                        {
-                            var data = "收到来自客户端的数据： " + line + "\n";
-                        }
-                    }
-                    pipe.Disconnect();
-                }
-            });
         }
 
         #endregion
 
         private System.Windows.Forms.TableLayoutPanel tblLayout;
+        private System.Windows.Forms.RichTextBox txtBox;
+
+        private const int WM_COPYDATA = 0x004A;
+
+        protected override void DefWndProc(ref Message m)
+        {
+            switch (m.Msg)
+            {
+                case WM_COPYDATA:
+                    var cds = (COPYDATASTRUCT)m.GetLParam(typeof(COPYDATASTRUCT));
+                    var txt = cds.lpData;
+                    txtBox.Text += "收到来自客户端的数据： " + txt + "\n"; ;
+                    break;
+                default:
+                    base.DefWndProc(ref m);
+                    break;
+            }
+        }
     }
 }
 
