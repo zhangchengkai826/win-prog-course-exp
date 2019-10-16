@@ -68,7 +68,18 @@ namespace comzck
                 var doc = app.Documents.Open(fileName);
                 doc.Activate();
 
-                doc.Shapes.AddTextEffect(MsoPresetTextEffect.msoTextEffect1, "Some WordArt", "Comic Sans MS", 28, MsoTriState.msoTrue, MsoTriState.msoTrue, 50, 100);
+                try
+                {
+                    doc.Application.Selection.InlineShapes.AddPicture(@"C:\Users\andys\Desktop\Picture1.png");
+                }
+                catch(Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                    doc.Save();
+                    doc.Close();
+                    app.Quit();
+                    Marshal.ReleaseComObject(app);
+                }
 
                 doc.Save();
                 doc.Close();

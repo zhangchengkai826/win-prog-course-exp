@@ -285,7 +285,14 @@ namespace win_prog_course_exp
                 mysqlDataSet = new DataSet();
                 mysqlAdapter.Fill(mysqlDataSet);
                 var cmdBuilder = new MySqlCommandBuilder(mysqlAdapter);
-                mysqlAdapter.UpdateCommand = cmdBuilder.GetUpdateCommand();
+                try
+                {
+                    mysqlAdapter.UpdateCommand = cmdBuilder.GetUpdateCommand();
+                }
+                catch(Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
 
                 DBDataPresenter.ItemsSource = mysqlDataSet.Tables[0].DefaultView;
             }

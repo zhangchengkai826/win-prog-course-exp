@@ -30,7 +30,7 @@
                 <Grid Grid.Row="1" Grid.Column="0">
                     <Button Background="Honeydew" Click="Btn_Word2_Click">
                         <TextBlock FontSize="14">
-                            Task 2: 使用Word COM组件在一个Word文档中添加艺术字
+                            Task 2: 使用Word COM组件在一个Word文档中添加图片
                         </TextBlock>
                     </Button>
                 </Grid>

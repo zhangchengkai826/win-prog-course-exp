@@ -38,7 +38,7 @@ namespace win_prog_course_exp
                 var context = obj as ChapterContent4;
                 while (true)
                 {
-                    Thread.Sleep(context.ProduceSpeed);
+                    Thread.Sleep(context.random.Next(context.ProduceSpeed / 2, context.ProduceSpeed / 2 * 3));
                     context.semaphore.WaitOne();
                     context.mutex.WaitOne();
                     context.queue.Enqueue(Id);
@@ -74,7 +74,7 @@ namespace win_prog_course_exp
                 var context = obj as ChapterContent4;
                 while (true)
                 {
-                    Thread.Sleep(context.ConsumerSpeed);
+                    Thread.Sleep(context.random.Next(context.ConsumerSpeed / 2, context.ConsumerSpeed / 2 * 3));
                     context.mutex.WaitOne();
                     var producerId = context.queue.Dequeue();
                     context.Log.Dispatcher.Invoke(() => {
@@ -93,6 +93,7 @@ namespace win_prog_course_exp
                 Thread.Start(context);
             }
         }
+        public Random random;
         public Mutex mutex;
         public Semaphore semaphore;
         public Queue<int> queue;
@@ -109,6 +110,7 @@ namespace win_prog_course_exp
             queue = new Queue<int>();
             producers = new List<Producer>();
             consumers = new List<Consumer>();
+            random = new Random();
         }
 
         private void AddProducer(object sender, RoutedEventArgs e)
